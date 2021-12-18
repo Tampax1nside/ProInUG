@@ -1,0 +1,39 @@
+﻿@page "/create-point"
+
+<div class="container" style="max-width: 1200px;">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h3 class="text-center text-dark mt-5">Create new payment point</h3>
+            <div class="card">
+                <EditForm Model="paymentPoint" OnValidSubmit="@(() => OnSubmitAsync(paymentPoint))"
+                          class="card-body">
+                    <DataAnnotationsValidator />
+                    <div class="mb-3">
+                        <InputText id="device-uri" class="form-control" placeholder="Device url"
+                                   @bind-Value="paymentPoint.DeviceUri" />
+                        <ValidationMessage For="@(() => paymentPoint.DeviceUri)" />
+                    </div>
+                    <div class="mb-3">
+                        <InputText id="payment-address" class="form-control" placeholder="Payment address"
+                                   @bind-Value="paymentPoint.PaymentAddress" />
+                        <ValidationMessage For="@(() => paymentPoint.PaymentAddress)" />
+                    </div>
+                    <div class="mb-3">
+                        <InputText id="operator-name" class="form-control" placeholder="Operator name"
+                                   @bind-Value="paymentPoint.OperatorName" />
+                        <ValidationMessage For="@(() => paymentPoint.OperatorName)" />
+                    </div>
+                    <div class="mb-3">
+                        <InputText id="nomenclature-name" class="form-control" placeholder="Nomenclature name"
+                                   @bind-Value="paymentPoint.NomenclatureName" />
+                        <ValidationMessage For="@(() => paymentPoint.NomenclatureName)" />
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" value="Submit" class="btn btn-primary px-5 mb-5 w-100"
+                               disabled="@isSubmitButtonDisabled" />
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>

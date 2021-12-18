@@ -1,0 +1,41 @@
+﻿@page "/"
+@attribute [Authorize]
+
+<h3>Payment points list</h3>
+
+<button type="button" class="btn btn-dark" @onclick="GetPaymentPointsAsync">Get payment points</button>
+<a href="/create-point" class="btn btn-primary">Add payment point</a>
+<button type="button" class="btn btn-danger" @onclick="LogoutAsync">Logout</button>
+
+<br />
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Is Enable</th>
+            <th>Device url</th>
+            <th>Operator name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (paymentPoints != null)
+        {
+            foreach (var point in paymentPoints)
+            {
+                <tr>
+                    <td>@point.Id</td>
+                    <td>@point.IsEnable</td>
+                    <td>@point.DeviceUri</td>
+                    <td>@point.OperatorName</td>
+                    <td>
+                        <button class="btn btn-success btn-sm">Edit</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => DeletePaymentPointAsync(point.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
