@@ -20,7 +20,6 @@ namespace ProInUG.BlazorUI.Services
         private readonly HttpClient _client;
         private readonly ILogger<KktCloudService> _logger;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
-        private readonly IConfiguration _configuration;
 
         /// <summary>
         /// Конструктор
@@ -31,12 +30,10 @@ namespace ProInUG.BlazorUI.Services
         public KktCloudService(
             HttpClient client, 
             AuthenticationStateProvider authenticationStateProvider,
-            IConfiguration configuration,
             ILogger<KktCloudService> logger)
         {
             _client = client;
             _authenticationStateProvider = authenticationStateProvider;
-            _configuration = configuration;
             _logger = logger;
         }
 
