@@ -16,7 +16,7 @@ namespace ProInUG.BlazorUI.Components
         public EventCallback OnCancelCallback { get; set; }
 
         [Parameter]
-        public PaymentPoint paymentPoint { get; set; } = new();
+        public PaymentPoint PaymentPoint { get; set; } = new();
 
         [Parameter]
         public string FormName { get; set; } = "";

@@ -1,9 +1,8 @@
 ﻿@using ProInUG.BlazorUI.Models
-<!-- Компонент редактирование PaymentPoint -->
 
-<MudContainer MaxWidth="MaxWidth.Small" Class="mt-auto">
-    <div style="max-width: 300px;">
-        <EditForm Model="@paymentPoint" OnValidSubmit="@(()=>OnSubmitCallback.InvokeAsync(paymentPoint))">
+<!-- Компонент редактирование PaymentPoint -->
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-15">
+        <EditForm Model="@PaymentPoint" OnValidSubmit="@(()=>OnSubmitCallback.InvokeAsync(PaymentPoint))">
             <DataAnnotationsValidator />
             <MudCard>
                 <MudCardHeader>
@@ -13,21 +12,21 @@
                 <MudCardContent>
                     <!-- device url -->
                     <MudTextField Label="Device Url" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                  @bind-Value="paymentPoint.DeviceUri" For="(() => paymentPoint.DeviceUri)" />
+                                  @bind-Value="PaymentPoint.DeviceUri" For="(() => PaymentPoint.DeviceUri)" />
                     <!-- is enabled -->
-                    <MudCheckBox @bind-Checked="@paymentPoint.IsEnable" Label="Enable"></MudCheckBox>
+                    <MudCheckBox @bind-Checked="@PaymentPoint.IsEnable" Label="Enable"></MudCheckBox>
                     <!-- payment address -->
                     <MudTextField Label="Payment address" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                  @bind-Value="paymentPoint.PaymentAddress" For="(() => paymentPoint.PaymentAddress)" />
+                                  @bind-Value="PaymentPoint.PaymentAddress" For="(() => PaymentPoint.PaymentAddress)" />
                     <!-- payment address -->
                     <MudTextField Label="Operator name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                  @bind-Value="paymentPoint.OperatorName" For="(() => paymentPoint.OperatorName)" />
+                                  @bind-Value="PaymentPoint.OperatorName" For="(() => PaymentPoint.OperatorName)" />
                     <!-- payment address -->
                     <MudTextField Label="Nomenclature name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                                  @bind-Value="paymentPoint.NomenclatureName" For="(() => paymentPoint.NomenclatureName)" />
+                                  @bind-Value="PaymentPoint.NomenclatureName" For="(() => PaymentPoint.NomenclatureName)" />
                     <!-- taxation type -->
                     <MudSelect T="@TaxationType" Variant="Variant.Outlined" Margin="Margin.Dense"
-                               @bind-Value="paymentPoint.TaxationType">
+                               @bind-Value="PaymentPoint.TaxationType">
                         @foreach (var value in Enum.GetValues<TaxationType>())
                         {
                             <MudSelectItem Value="@value" />
@@ -35,7 +34,7 @@
                     </MudSelect>
                     <!-- taxation type -->
                     <MudSelect T="@TaxRate" Variant="Variant.Outlined" Margin="Margin.Dense"
-                               @bind-Value="paymentPoint.TaxRate">
+                               @bind-Value="PaymentPoint.TaxRate">
                         @foreach (var value in Enum.GetValues<TaxRate>())
                         {
                             <MudSelectItem Value="@value" />
@@ -52,5 +51,4 @@
                 </MudCardActions>
             </MudCard>
         </EditForm>
-    </div>
 </MudContainer>
