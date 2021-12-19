@@ -16,7 +16,7 @@ namespace ProInUG.BlazorUI.Pages
         [Inject]
         public IKktCloudService? KktCloudService { get; set; }
 
-        private List<PaymentPoint>? paymentPoints;
+        private List<PaymentPoint> paymentPoints = new();
 
         protected async override Task OnInitializedAsync()
         {
