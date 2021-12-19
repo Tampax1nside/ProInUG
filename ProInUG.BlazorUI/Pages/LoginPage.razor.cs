@@ -67,7 +67,7 @@ namespace ProInUG.BlazorUI.Pages
             parameters.Add("ContentText", message);
             parameters.Add("ButtonText", "Close");
             parameters.Add("Color", Color.Error);
-            Dialog?.Show<DialogLoginPageComponent>("Login Error", parameters);
+            Dialog?.Show<DialogLoginPage>("Login Error", parameters);
         }
     }
 }

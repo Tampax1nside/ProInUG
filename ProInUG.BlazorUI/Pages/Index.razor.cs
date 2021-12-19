@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using MudBlazor;
+using ProInUG.BlazorUI.Components;
 using ProInUG.BlazorUI.Models;
 using ProInUG.BlazorUI.Services;
 using System;
@@ -16,6 +18,9 @@ namespace ProInUG.BlazorUI.Pages
         [Inject]
         public IKktCloudService? KktCloudService { get; set; }
 
+        [Inject]
+        public IDialogService? DialogService { get; set; }
+
         private List<PaymentPoint> paymentPoints = new();
 
         protected async override Task OnInitializedAsync()
@@ -28,14 +33,30 @@ namespace ProInUG.BlazorUI.Pages
             if (KktCloudService == null)
                 return;
 
-            paymentPoints = await KktCloudService.GetPaymentPointsAsync();
+            var points = await KktCloudService.GetPaymentPointsAsync();
+            if (points != null)
+                paymentPoints = points;
         }
 
-        private async Task DeletePaymentPointAsync(Guid pointId)
+        private async Task DeletePaymentPointAsync(PaymentPoint point)
         {
             if (KktCloudService == null)
                 return;
-            await KktCloudService.DeletePaymentPointAsync(pointId);
+
+            DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+            var parameters = new DialogParameters { ["paymentPoint"] = point };
+            var dialog = DialogService?.Show<DialogDeletePaymentPoint>("Delete Payment Point", parameters, options);
+            
+            if (dialog == null)
+                return;
+            
+            var result = await dialog.Result;
+
+            if (!result.Cancelled)
+            {
+                Guid.TryParse(result.Data.ToString(), out Guid pointId);
+                await KktCloudService.DeletePaymentPointAsync(pointId);
+            }
 
             await GetPaymentPointsAsync();
         }

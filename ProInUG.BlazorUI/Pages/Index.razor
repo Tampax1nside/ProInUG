@@ -23,7 +23,7 @@
             <MudTd DataLabel="Operator name">@context.OperatorName</MudTd>
             <MudTd DataLabel="Action">
                 <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" 
-                           @onclick="() => DeletePaymentPointAsync(context.Id)">Delete</MudButton>
+                           @onclick="() => DeletePaymentPointAsync(context)">Delete</MudButton>
             </MudTd>
         </RowTemplate>
     </MudTable>

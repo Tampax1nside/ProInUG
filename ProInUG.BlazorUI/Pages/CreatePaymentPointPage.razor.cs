@@ -38,5 +38,13 @@ namespace ProInUG.BlazorUI.Pages
 
             NavigationManager.NavigateTo("/");
         }
+
+        private void GoBack()
+        {
+            if (NavigationManager == null)
+                return;
+
+            NavigationManager.NavigateTo("/");
+        }
     }
 }
