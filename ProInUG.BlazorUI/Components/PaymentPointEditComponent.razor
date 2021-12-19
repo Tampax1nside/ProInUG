@@ -1,0 +1,56 @@
+﻿@using ProInUG.BlazorUI.Models
+<!-- Компонент редактирование PaymentPoint -->
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-auto">
+    <div style="max-width: 300px;">
+        <EditForm Model="@paymentPoint" OnValidSubmit="@(()=>OnSubmitCallback.InvokeAsync(paymentPoint))">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardHeader>
+                    <!-- form name -->
+                    <MudText Typo="Typo.h5">@FormName</MudText>
+                </MudCardHeader>
+                <MudCardContent>
+                    <!-- device url -->
+                    <MudTextField Label="Device Url" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  @bind-Value="paymentPoint.DeviceUri" For="(() => paymentPoint.DeviceUri)" />
+                    <!-- is enabled -->
+                    <MudCheckBox @bind-Checked="@paymentPoint.IsEnable" Label="Enable"></MudCheckBox>
+                    <!-- payment address -->
+                    <MudTextField Label="Payment address" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  @bind-Value="paymentPoint.PaymentAddress" For="(() => paymentPoint.PaymentAddress)" />
+                    <!-- payment address -->
+                    <MudTextField Label="Operator name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  @bind-Value="paymentPoint.OperatorName" For="(() => paymentPoint.OperatorName)" />
+                    <!-- payment address -->
+                    <MudTextField Label="Nomenclature name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  @bind-Value="paymentPoint.NomenclatureName" For="(() => paymentPoint.NomenclatureName)" />
+                    <!-- taxation type -->
+                    <MudSelect T="@TaxationType" Variant="Variant.Outlined" Margin="Margin.Dense"
+                               @bind-Value="paymentPoint.TaxationType">
+                        @foreach (var value in Enum.GetValues<TaxationType>())
+                        {
+                            <MudSelectItem Value="@value" />
+                        }
+                    </MudSelect>
+                    <!-- taxation type -->
+                    <MudSelect T="@TaxRate" Variant="Variant.Outlined" Margin="Margin.Dense"
+                               @bind-Value="paymentPoint.TaxRate">
+                        @foreach (var value in Enum.GetValues<TaxRate>())
+                        {
+                            <MudSelectItem Value="@value" />
+                        }
+                    </MudSelect>
+                </MudCardContent>
+                <MudCardActions>
+                    <!-- cancel -->
+                    <MudButton ButtonType="ButtonType.Button" Variant="Variant.Text" Color="Color.Error" Class="ml-auto"
+                               @onclick="@(() => OnCancelCallback.InvokeAsync())" Disabled="@IsSubmitButtonDisable">Cancel</MudButton>
+                    <!-- submit -->
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Dark" Class="ml-1"
+                               Disabled="@IsSubmitButtonDisable">@SubmitButtonName</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </div>
+</MudContainer>
