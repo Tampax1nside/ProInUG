@@ -47,7 +47,7 @@ namespace ProInUG.BlazorUI.Services
         /// <returns></returns>
         public async Task<PaymentPoint?> CreatePaymentPointAsync(PaymentPoint paymentPoint)
         {
-            var api = _configuration.GetSection("WebApiVersion").Value;
+            var api = "v0.0";
             var uri = $"{api}/{PAYMENT_POINTS_ENDPOINT}";
 
             var jwt = GetJwt();
@@ -80,7 +80,7 @@ namespace ProInUG.BlazorUI.Services
         /// <returns></returns>
         public async Task<List<PaymentPoint>?> GetPaymentPointsAsync()
         {
-            var api = _configuration.GetSection("WebApiVersion").Value;
+            var api = "v0.0";
             var uri = $"{api}/{PAYMENT_POINTS_ENDPOINT}";
 
             var jwt = GetJwt();
@@ -114,7 +114,7 @@ namespace ProInUG.BlazorUI.Services
         /// <returns></returns>
         public async Task DeletePaymentPointAsync(Guid pointId)
         {
-            var api = _configuration.GetSection("WebApiVersion").Value;
+            var api = "v0.0";
             var uri = $"{api}/{PAYMENT_POINTS_ENDPOINT}/{pointId}";
 
             var jwt = GetJwt();
