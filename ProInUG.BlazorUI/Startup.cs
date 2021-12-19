@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using ProInUG.BlazorUI.Data;
 using ProInUG.BlazorUI.Extentions;
 using ProInUG.BlazorUI.Services;
+using MudBlazor.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,8 @@ namespace ProInUG.BlazorUI
                 .AddScoped<ProtectedLocalStorage>()
                 .AddScoped<AuthenticationStateProvider, CwAuthenticationStateProvider>()
                 .AddSingleton<ISystemClock, RealSystemClock>()
-                .AddSingleton<WeatherForecastService>(); // TODO: долго таскаться будет?
+                .AddSingleton<WeatherForecastService>() // TODO: долго таскаться будет?
+                .AddMudServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

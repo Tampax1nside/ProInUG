@@ -1,5 +1,28 @@
 ﻿@page "/login"
 
-<LoginFormComponent OnSubmitCallback="LoginAsync" 
-                    IsSubmitButtonDisabled="isSubmitButtonDisabled"
-                    LoginResultMessage="@loginResultMessage"/>
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-16">
+    <div style="max-width: 300px;">
+        <EditForm Model="@credentials" OnValidSubmit="@(()=>LoginAsync(credentials))">
+            <DataAnnotationsValidator />
+            <MudCard>
+                <MudCardHeader>
+                    <MudText Typo="Typo.h5">Login form</MudText>
+                </MudCardHeader>
+                <MudCardContent>
+                    <!-- username -->
+                    <MudTextField Label="Username" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  @bind-Value="credentials.Username" For="(() => credentials.Username)" />
+                    <!-- password -->
+                    <MudTextField Label="Password" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense" Class="mt-3"
+                                  InputType="InputType.Password" @bind-Value="credentials.Password"
+                                  For="(() => credentials.Password)" />
+                </MudCardContent>
+                <MudCardActions>
+                    <!-- submit -->
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Dark" Class="ml-auto"
+                               Disabled="@isSubmitButtonDisabled">Login</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EditForm>
+    </div>
+</MudContainer>

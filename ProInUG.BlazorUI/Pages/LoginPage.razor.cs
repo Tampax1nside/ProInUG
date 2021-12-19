@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using MudBlazor;
+using ProInUG.BlazorUI.Components;
 using ProInUG.BlazorUI.Models;
 using ProInUG.BlazorUI.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace ProInUG.BlazorUI.Pages
@@ -15,6 +14,11 @@ namespace ProInUG.BlazorUI.Pages
         public AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
         [Inject]
         public NavigationManager? NavigationManager { get; set; }
+
+        [Inject]
+        public IDialogService? Dialog { get; set; }
+
+        private Credentials credentials = new();
 
         private bool isSubmitButtonDisabled;
         private string loginResultMessage = "";
@@ -32,6 +36,7 @@ namespace ProInUG.BlazorUI.Pages
             if (result == 401)
             {
                 loginResultMessage = "Wrong username or password.";
+                ErrorMessageDialog(loginResultMessage);
                 isSubmitButtonDisabled = false;
                 return;
             }
@@ -39,6 +44,7 @@ namespace ProInUG.BlazorUI.Pages
             if (result != 0)
             {
                 loginResultMessage = "Error ocured while login.";
+                ErrorMessageDialog(loginResultMessage);
                 isSubmitButtonDisabled = false;
                 return;
             }
@@ -51,6 +57,17 @@ namespace ProInUG.BlazorUI.Pages
                 return;
 
             NavigationManager.NavigateTo("/");
+        }
+
+        private void ErrorMessageDialog(string message)
+        {
+            DialogOptions options = new() { CloseButton = true };
+
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+            parameters.Add("ButtonText", "Close");
+            parameters.Add("Color", Color.Error);
+            Dialog?.Show<DialogLoginPageComponent>("Login Error", parameters);
         }
     }
 }

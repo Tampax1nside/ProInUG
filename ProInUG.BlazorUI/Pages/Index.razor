@@ -1,11 +1,14 @@
 ﻿@page "/"
 @attribute [Authorize]
 
-<h3>Payment points list</h3>
-
-<button type="button" class="btn btn-dark" @onclick="GetPaymentPointsAsync">Get payment points</button>
-<a href="/create-point" class="btn btn-primary">Add payment point</a>
-<button type="button" class="btn btn-danger" @onclick="LogoutAsync">Logout</button>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudText Typo="Typo.h3">Payment points list</MudText>
+    <MudButton Variant="Variant.Filled" Color="Color.Dark" @onclick="GetPaymentPointsAsync">Get payment points</MudButton>
+    <MudButton Link="/create-point" Variant="Variant.Filled" Color="Color.Primary">Add new point</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Warning" @onclick="LogoutAsync">Logout</MudButton>
+    <br />
+    <br />
+</MudContainer>
 
 <br />
 <br />

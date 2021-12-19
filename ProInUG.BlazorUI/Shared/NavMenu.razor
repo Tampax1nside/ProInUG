@@ -1,4 +1,14 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿<MudNavMenu>
+    <MudNavLink Href="/dashboard">Dashboard</MudNavLink>
+    <MudNavLink Href="/servers">Servers</MudNavLink>
+    <MudNavGroup Title="Settings" Expanded="true">
+        <MudNavLink Href="/users">Users</MudNavLink>
+        <MudNavLink Href="/security">Security</MudNavLink>
+    </MudNavGroup>
+    <MudNavLink Href="/about">About</MudNavLink>
+</MudNavMenu>
+
+@*<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">ProInUG.BlazorUI</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -41,4 +51,4 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
-}
+}*@
