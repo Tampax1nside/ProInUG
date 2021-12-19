@@ -3,8 +3,12 @@
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudText Typo="Typo.h4" Class="my-1">Payment points list</MudText>
+    <!-- Get PPs button -->
     <MudButton Variant="Variant.Filled" Color="Color.Dark" @onclick="GetPaymentPointsAsync">Get payment points</MudButton>
-    <MudButton Link="/create-point" Variant="Variant.Filled" Color="Color.Primary">Add new point</MudButton>
+    <!-- Create PP button -->
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CreatePaymentPointAsync">Add new point</MudButton>
+    @*<MudButton Link="/create-point" Variant="Variant.Filled" Color="Color.Primary">Add new point</MudButton>*@
+    <!-- Logout buttons -->
     <MudButton Variant="Variant.Filled" Color="Color.Warning" @onclick="LogoutAsync">Logout</MudButton>
     <br />
     <br />
@@ -22,7 +26,11 @@
             <MudTd DataLabel="Device url">@context.DeviceUri</MudTd>
             <MudTd DataLabel="Operator name">@context.OperatorName</MudTd>
             <MudTd DataLabel="Action">
-                <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" 
+                <!-- Edit PP button -->
+                <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
+                           @onclick="() => DeletePaymentPointAsync(context)">Delete</MudButton>
+                <!-- Delete PP button -->
+                <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
                            @onclick="() => DeletePaymentPointAsync(context)">Delete</MudButton>
             </MudTd>
         </RowTemplate>

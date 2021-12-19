@@ -28,6 +28,46 @@ namespace ProInUG.BlazorUI.Pages
             await GetPaymentPointsAsync();
         }
 
+        /// <summary>
+        /// Создает новую точку оплаты
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        private async Task CreatePaymentPointAsync()
+        {
+            if (KktCloudService == null)
+                return;
+
+            DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+            var parameters = new DialogParameters 
+            {
+                ["SubmitButtonName"] = "Create"
+            };
+            var dialogForm = DialogService?.Show<DialogEditPaymentPoint>("Create Payment Point", parameters, options);
+
+            if (dialogForm == null)
+                return;
+
+            var result = await dialogForm.Result;
+
+            if (result.Cancelled)
+                return;
+
+            var dialogProcess = ProcessMessageDialog("processind ...");
+
+            await Task.Delay(2000);
+            dialogProcess?.Close();
+
+            //isSubmitButtonDisabled = true;
+            //await KktCloudService.CreatePaymentPointAsync(point);
+            //isSubmitButtonDisabled = false;
+
+            //if (NavigationManager == null)
+            //    return;
+
+            //NavigationManager.NavigateTo("/");
+        }
+
         private async Task GetPaymentPointsAsync()
         {
             if (KktCloudService == null)
@@ -59,6 +99,17 @@ namespace ProInUG.BlazorUI.Pages
             }
 
             await GetPaymentPointsAsync();
+        }
+
+        private IDialogReference? ProcessMessageDialog(string message)
+        {
+            DialogOptions options = new() { DisableBackdropClick = true };
+
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+            //parameters.Add("ButtonText", "Close");
+            //parameters.Add("Color", Color.Primary);
+            return DialogService?.Show<DialogProcess>("In progress", parameters, options);
         }
 
         // TODO: не место этому тут - просто тестил потом куда-то уйдет
