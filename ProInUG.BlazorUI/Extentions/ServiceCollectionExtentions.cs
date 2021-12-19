@@ -2,9 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ProInUG.BlazorUI.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProInUG.BlazorUI.Extentions
 {
