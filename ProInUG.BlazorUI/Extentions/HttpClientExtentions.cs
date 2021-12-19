@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ namespace ProInUG.BlazorUI.Extentions
 {
     public static class HttpClientExtentions
     {
+        private static readonly Random Rnd = new Random();
 
         // TODO: тут если честно тоже повторяемость кода которая пока мне не очень, может как-то убрать?
         // добавить параметр HttpMethod а остальное примерно одинаково. И назвать SendAsJson
@@ -71,6 +73,17 @@ namespace ProInUG.BlazorUI.Extentions
         {
             var jsonStream = await responseContent.ReadAsStreamAsync();
             return await JsonSerializer.DeserializeAsync<T>(jsonStream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+
+        /// <summary>
+        /// Сгенерировать Id запроса
+        /// </summary>
+        /// <returns></returns>
+        internal static string GenerateRequestId()
+        {
+            var rndBuff = new byte[8];
+            Rnd.NextBytes(rndBuff);
+            return Convert.ToBase64String(rndBuff);
         }
     }
 }
