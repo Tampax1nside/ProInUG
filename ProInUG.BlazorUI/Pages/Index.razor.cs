@@ -29,7 +29,7 @@ namespace ProInUG.BlazorUI.Pages
         }
 
         /// <summary>
-        /// Создает новую точку оплаты
+        /// Создает новую точку оплаты (через диалоговоые окна)
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
@@ -39,33 +39,41 @@ namespace ProInUG.BlazorUI.Pages
                 return;
 
             DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-            var parameters = new DialogParameters 
-            {
-                ["SubmitButtonName"] = "Create"
-            };
+            var parameters = new DialogParameters { ["SubmitButtonName"] = "Create" };
             var dialogForm = DialogService?.Show<DialogEditPaymentPoint>("Create Payment Point", parameters, options);
 
             if (dialogForm == null)
                 return;
-
             var result = await dialogForm.Result;
-
             if (result.Cancelled)
                 return;
 
             var dialogProcess = ProcessMessageDialog("processind ...");
 
+            // TODO: убрать
             await Task.Delay(2000);
+
+            var creatingResult = await KktCloudService.CreatePaymentPointAsync((PaymentPoint) result.Data);
+
             dialogProcess?.Close();
 
-            //isSubmitButtonDisabled = true;
-            //await KktCloudService.CreatePaymentPointAsync(point);
-            //isSubmitButtonDisabled = false;
+            IDialogReference? dialogMessage;
 
-            //if (NavigationManager == null)
-            //    return;
+            if (creatingResult == null)
+            {
+                dialogMessage = ErrorMessageDialog("Creating PP Error ocured.");
+                if (dialogMessage == null)
+                    return;
+                await dialogMessage.Result;
+                return;
+            }
 
-            //NavigationManager.NavigateTo("/");
+            dialogMessage = SuccessMessageDialog("PP created successfully.");
+            if (dialogMessage == null)
+                return;
+            await dialogMessage.Result;
+
+            await GetPaymentPointsAsync();
         }
 
         private async Task GetPaymentPointsAsync()
@@ -110,6 +118,26 @@ namespace ProInUG.BlazorUI.Pages
             //parameters.Add("ButtonText", "Close");
             //parameters.Add("Color", Color.Primary);
             return DialogService?.Show<DialogProcess>("In progress", parameters, options);
+        }
+
+        private IDialogReference? ErrorMessageDialog(string message)
+        {
+            DialogOptions options = new() { CloseButton = true };
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+            parameters.Add("ButtonText", "Close");
+            parameters.Add("Color", Color.Error);
+            return DialogService?.Show<DialogLoginPage>("Creating PP Error", parameters, options);
+        }
+
+        private IDialogReference? SuccessMessageDialog(string message)
+        {
+            DialogOptions options = new() { CloseButton = true };
+            var parameters = new DialogParameters();
+            parameters.Add("ContentText", message);
+            parameters.Add("ButtonText", "Close");
+            parameters.Add("Color", Color.Default);
+            return DialogService?.Show<DialogLoginPage>("Creating PP Success", parameters, options);
         }
 
         // TODO: не место этому тут - просто тестил потом куда-то уйдет
