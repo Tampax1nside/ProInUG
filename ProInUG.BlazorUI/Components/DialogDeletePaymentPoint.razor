@@ -2,14 +2,14 @@
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1" />
-            Delete Payment Point?
+            @MudDialog?.Title
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField Value="@paymentPoint.Id.ToString()" Label="Payment point ID" ReadOnly="true" />
-        <MudTextField Value="@paymentPoint.DeviceUri" Label="Device Url" ReadOnly="true" />
-        <MudTextField Value="@paymentPoint.OperatorName" Label="Operator Name" ReadOnly="true" />
-        <MudTextField Value="@paymentPoint.IsEnable" Label="Is Enable" ReadOnly="true" />
+        <MudTextField Value="@PaymentPoint.Id.ToString()" Label="Payment point ID" ReadOnly="true" />
+        <MudTextField Value="@PaymentPoint.DeviceUri" Label="Device Url" ReadOnly="true" />
+        <MudTextField Value="@PaymentPoint.OperatorName" Label="Operator Name" ReadOnly="true" />
+        <MudTextField Value="@PaymentPoint.IsEnable" Label="Is Enable" ReadOnly="true" />
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
