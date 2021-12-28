@@ -21,9 +21,9 @@ namespace ProInUG.BlazorUI.Pages
         [Inject]
         public IDialogService? DialogService { get; set; }
 
-        private List<PaymentPoint> paymentPoints = new();
+        private List<PaymentPoint> _paymentPoints = new();
 
-        protected async override Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
             await GetPaymentPointsAsync();
         }
@@ -31,27 +31,23 @@ namespace ProInUG.BlazorUI.Pages
         /// <summary>
         /// Создает новую точку оплаты (через диалоговоые окна)
         /// </summary>
-        /// <param name="point"></param>
         /// <returns></returns>
         private async Task CreatePaymentPointAsync()
         {
             if (KktCloudService == null)
                 return;
 
-            DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
-            var parameters = new DialogParameters { ["SubmitButtonName"] = "Create" };
-            var dialogForm = DialogService?.Show<DialogEditPaymentPoint>("Create Payment Point", parameters, options);
-
-            if (dialogForm == null)
+            var createDialogForm = CreateDialog();
+            if (createDialogForm == null)
                 return;
-            var result = await dialogForm.Result;
+            var result = await createDialogForm.Result;
             if (result.Cancelled)
                 return;
 
-            var dialogProcess = ProcessMessageDialog("processind ...");
+            var dialogProcess = ProcessMessageDialog("processing ...");
 
-            // TODO: убрать
-            await Task.Delay(2000);
+            // TODO: удалить
+            await Task.Delay(5000);
 
             var creatingResult = await KktCloudService.CreatePaymentPointAsync((PaymentPoint) result.Data);
 
@@ -76,6 +72,20 @@ namespace ProInUG.BlazorUI.Pages
             await GetPaymentPointsAsync();
         }
 
+        private async Task EditPaymentPointAsync(PaymentPoint point)
+        {
+            if (KktCloudService == null)
+                return;
+            var editDialog = EditDialog(point);
+            if(editDialog == null)
+                return;
+            var result = await editDialog.Result;
+            if (result.Cancelled)
+                return;
+            // TODO: редактирование точки оплаты в сервисе
+            // var editingResponse = await KktCloudService
+        }
+
         private async Task GetPaymentPointsAsync()
         {
             if (KktCloudService == null)
@@ -83,7 +93,7 @@ namespace ProInUG.BlazorUI.Pages
 
             var points = await KktCloudService.GetPaymentPointsAsync();
             if (points != null)
-                paymentPoints = points;
+                _paymentPoints = points;
         }
 
         private async Task DeletePaymentPointAsync(PaymentPoint point)
@@ -109,34 +119,48 @@ namespace ProInUG.BlazorUI.Pages
             await GetPaymentPointsAsync();
         }
 
+        private IDialogReference? CreateDialog()
+        {
+            DialogOptions options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+            var parameters = new DialogParameters { ["SubmitButtonName"] = "Создать" };
+            return DialogService?.Show<DialogEditPaymentPoint>("Создание точки оплаты", parameters, options);
+        }
+
+        private IDialogReference? EditDialog(PaymentPoint point)
+        {
+            DialogOptions options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
+            var parameters = new DialogParameters { ["SubmitButtonName"] = "Редактировать", ["PaymentPoint"] = point };
+            return DialogService?.Show<DialogEditPaymentPoint>("Редактирование точки оплаты", parameters, options);
+        }
+
         private IDialogReference? ProcessMessageDialog(string message)
         {
             DialogOptions options = new() { DisableBackdropClick = true };
-
-            var parameters = new DialogParameters();
-            parameters.Add("ContentText", message);
-            //parameters.Add("ButtonText", "Close");
-            //parameters.Add("Color", Color.Primary);
+            var parameters = new DialogParameters {{"ContentText", message}};
             return DialogService?.Show<DialogProcess>("In progress", parameters, options);
         }
 
         private IDialogReference? ErrorMessageDialog(string message)
         {
             DialogOptions options = new() { CloseButton = true };
-            var parameters = new DialogParameters();
-            parameters.Add("ContentText", message);
-            parameters.Add("ButtonText", "Close");
-            parameters.Add("Color", Color.Error);
+            var parameters = new DialogParameters
+            {
+                {"ContentText", message},
+                {"ButtonText", "Close"},
+                {"Color", Color.Error}
+            };
             return DialogService?.Show<DialogLoginPage>("Creating PP Error", parameters, options);
         }
 
         private IDialogReference? SuccessMessageDialog(string message)
         {
-            DialogOptions options = new() { CloseButton = true };
-            var parameters = new DialogParameters();
-            parameters.Add("ContentText", message);
-            parameters.Add("ButtonText", "Close");
-            parameters.Add("Color", Color.Default);
+            DialogOptions options = new() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
+            var parameters = new DialogParameters
+            {
+                {"ContentText", message},
+                {"ButtonText", "Close"},
+                {"Color", Color.Default}
+            };
             return DialogService?.Show<DialogLoginPage>("Creating PP Success", parameters, options);
         }
 

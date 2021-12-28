@@ -7,12 +7,11 @@
     <MudButton Variant="Variant.Filled" Color="Color.Dark" @onclick="GetPaymentPointsAsync">Get payment points</MudButton>
     <!-- Create PP button -->
     <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CreatePaymentPointAsync">Add new point</MudButton>
-    @*<MudButton Link="/create-point" Variant="Variant.Filled" Color="Color.Primary">Add new point</MudButton>*@
     <!-- Logout buttons -->
     <MudButton Variant="Variant.Filled" Color="Color.Warning" @onclick="LogoutAsync">Logout</MudButton>
     <br />
     <br />
-    <MudTable Items="@paymentPoints">
+    <MudTable Items="@_paymentPoints">
         <HeaderContent>
             <MudTh>Id</MudTh>
             <MudTh>Is Enable</MudTh>
@@ -28,7 +27,7 @@
             <MudTd DataLabel="Action">
                 <!-- Edit PP button -->
                 <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
-                           @onclick="() => DeletePaymentPointAsync(context)">Delete</MudButton>
+                           @onclick="() => EditPaymentPointAsync(context)">Edit</MudButton>
                 <!-- Delete PP button -->
                 <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
                            @onclick="() => DeletePaymentPointAsync(context)">Delete</MudButton>
@@ -36,36 +35,3 @@
         </RowTemplate>
     </MudTable>
 </MudContainer>
-
-@*<br />
-<br />
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Is Enable</th>
-            <th>Device url</th>
-            <th>Operator name</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (paymentPoints != null)
-        {
-            foreach (var point in paymentPoints)
-            {
-                <tr>
-                    <td>@point.Id</td>
-                    <td>@point.IsEnable</td>
-                    <td>@point.DeviceUri</td>
-                    <td>@point.OperatorName</td>
-                    <td>
-                        <button class="btn btn-success btn-sm">Edit</button>
-                        <button class="btn btn-danger btn-sm" @onclick="() => DeletePaymentPointAsync(point.Id)">Delete</button>
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>*@
