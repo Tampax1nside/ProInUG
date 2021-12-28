@@ -17,7 +17,7 @@ namespace ProInUG.BlazorUI.Services
     /// </summary>
     public class CwAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private const string UserSessionObjectKey = "user_session_obj";
+        private const string USER_SESSION_OBJECT_KEY = "user_session_obj";
 
         public TokenDto? TokenDto { get; private set; }
 
@@ -73,7 +73,7 @@ namespace ProInUG.BlazorUI.Services
                 var result = await _authService.RefreshToken(TokenDto);
                 if (result.Error == 0 && result.Token != null)
                 {
-                    await _protectedLocalStorage.SetAsync(UserSessionObjectKey, JsonSerializer.Serialize(result.Token));
+                    await _protectedLocalStorage.SetAsync(USER_SESSION_OBJECT_KEY, JsonSerializer.Serialize(result.Token));
                     TokenDto = result.Token;
                     return GenerateAuthenticationState(TokenDto);
                 }
@@ -95,7 +95,7 @@ namespace ProInUG.BlazorUI.Services
             if (token == null) return 500;
             try
             {
-                await _protectedLocalStorage.SetAsync(UserSessionObjectKey, JsonSerializer.Serialize(token));
+                await _protectedLocalStorage.SetAsync(USER_SESSION_OBJECT_KEY, JsonSerializer.Serialize(token));
                 NotifyAuthenticationStateChanged(Task.FromResult(GenerateAuthenticationState(token)));
                 return 0;
             }
@@ -115,7 +115,7 @@ namespace ProInUG.BlazorUI.Services
             TokenDto = null;
             try
             {
-                await _protectedLocalStorage.DeleteAsync(UserSessionObjectKey);
+                await _protectedLocalStorage.DeleteAsync(USER_SESSION_OBJECT_KEY);
             }
             catch (Exception ex)
             {
@@ -133,7 +133,7 @@ namespace ProInUG.BlazorUI.Services
             if (TokenDto != null) return TokenDto;
             try
             {
-                var tokenDto = await _protectedLocalStorage.GetAsync<string>(UserSessionObjectKey);
+                var tokenDto = await _protectedLocalStorage.GetAsync<string>(USER_SESSION_OBJECT_KEY);
                 return string.IsNullOrEmpty(tokenDto.Value) ? null : 
                     JsonSerializer.Deserialize<TokenDto>(
                         tokenDto.Value, 
