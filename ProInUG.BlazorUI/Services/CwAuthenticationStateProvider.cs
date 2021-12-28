@@ -5,10 +5,10 @@ using Microsoft.Extensions.Logging;
 using ProInUG.BlazorUI.Dto;
 using ProInUG.BlazorUI.Models;
 using System;
-using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace ProInUG.BlazorUI.Services
 {
@@ -17,29 +17,35 @@ namespace ProInUG.BlazorUI.Services
     /// </summary>
     public class CwAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private const string USER_SESSION_OBJECT_KEY = "user_session_obj";
-        private const int TOKEN_VALID_MINUTES_REMAINS = 20; // TODO: в настройки приложения
+        private const string UserSessionObjectKey = "user_session_obj";
 
-        public TokenDto? TokenDto { get; set; }
+        public TokenDto? TokenDto { get; private set; }
 
         private readonly IAuthService _authService;
         private readonly ProtectedLocalStorage _protectedLocalStorage;
         private readonly ISystemClock _systemClock;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<CwAuthenticationStateProvider> _logger;
 
         /// <summary>
         /// Конструктор
         /// </summary>
+        /// <param name="authService"></param>
         /// <param name="protectedLocalStorage"></param>
+        /// <param name="systemClock"></param>
+        /// <param name="configuration"></param>
+        /// <param name="logger"></param>
         public CwAuthenticationStateProvider(
             IAuthService authService,
             ProtectedLocalStorage protectedLocalStorage,
             ISystemClock systemClock,
+            IConfiguration configuration,
             ILogger<CwAuthenticationStateProvider> logger)
         {
             _authService = authService;
             _protectedLocalStorage = protectedLocalStorage;
             _systemClock = systemClock;
+            _configuration = configuration;
             _logger = logger;
         }
 
@@ -67,7 +73,7 @@ namespace ProInUG.BlazorUI.Services
                 var result = await _authService.RefreshToken(TokenDto);
                 if (result.Error == 0 && result.Token != null)
                 {
-                    await _protectedLocalStorage.SetAsync(USER_SESSION_OBJECT_KEY, JsonSerializer.Serialize(result.Token));
+                    await _protectedLocalStorage.SetAsync(UserSessionObjectKey, JsonSerializer.Serialize(result.Token));
                     TokenDto = result.Token;
                     return GenerateAuthenticationState(TokenDto);
                 }
@@ -84,23 +90,18 @@ namespace ProInUG.BlazorUI.Services
         /// <returns></returns>
         public async Task<int> LoginAsync(Credentials credentials)
         {
-            var result = await _authService.LoginAsync(credentials);
-            if (result.Error != 0)
+            var (error, token) = await _authService.LoginAsync(credentials);
+            if (error != 0) return error;
+            if (token == null) return 500;
+            try
             {
-                return result.Error;
+                await _protectedLocalStorage.SetAsync(UserSessionObjectKey, JsonSerializer.Serialize(token));
+                NotifyAuthenticationStateChanged(Task.FromResult(GenerateAuthenticationState(token)));
+                return 0;
             }
-            if (result.Token != null)
+            catch (Exception ex)
             {
-                try
-                {
-                    await _protectedLocalStorage.SetAsync(USER_SESSION_OBJECT_KEY, JsonSerializer.Serialize(result.Token));
-                    NotifyAuthenticationStateChanged(Task.FromResult(GenerateAuthenticationState(result.Token)));
-                    return 0;
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Error ocured writing to browser protected local storage.");
-                }
+                _logger.LogError(ex, "Error occurred writing to browser protected local storage.");
             }
             return 500;
         }
@@ -114,11 +115,11 @@ namespace ProInUG.BlazorUI.Services
             TokenDto = null;
             try
             {
-                await _protectedLocalStorage.DeleteAsync(USER_SESSION_OBJECT_KEY);
+                await _protectedLocalStorage.DeleteAsync(UserSessionObjectKey);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error ocured while deleting data in browser protected local storage.");
+                _logger.LogError(ex, "Error occurred while deleting data in browser protected local storage.");
             }
             NotifyAuthenticationStateChanged(Task.FromResult(GenerateEmptyAuthenticationState()));
         }
@@ -129,20 +130,15 @@ namespace ProInUG.BlazorUI.Services
         /// <returns></returns>
         private async Task<TokenDto?> GetUserSessionAsync()
         {
-            if (TokenDto != null)
-            {
-                return TokenDto;
-            }
-
+            if (TokenDto != null) return TokenDto;
             try
             {
-                var tokenDto = await _protectedLocalStorage.GetAsync<string>(USER_SESSION_OBJECT_KEY);
-                if (string.IsNullOrEmpty(tokenDto.Value))
-                {
-                    return null;
-                }
-
-                return JsonSerializer.Deserialize<TokenDto>(tokenDto.Value, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var tokenDto = await _protectedLocalStorage.GetAsync<string>(UserSessionObjectKey);
+                return string.IsNullOrEmpty(tokenDto.Value) ? null : 
+                    JsonSerializer.Deserialize<TokenDto>(
+                        tokenDto.Value, 
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+                        );
             }
             catch (Exception ex)
             {
@@ -157,16 +153,16 @@ namespace ProInUG.BlazorUI.Services
         /// <returns></returns>
         private bool TokenIsValid()
         {
-            if (TokenDto == null)
-            {
-                return false;
-            }
-
+            if (TokenDto == null) return false;
+            
             var validTimeRemains = TokenDto.Expires - _systemClock.UtcNow;
             _logger.LogDebug($"User token valid time remains: {validTimeRemains}");
-
-            return validTimeRemains > TimeSpan.Zero &&
-                validTimeRemains > TimeSpan.FromMinutes(TOKEN_VALID_MINUTES_REMAINS);
+            
+            if(int.TryParse(_configuration["TokenValidMinutesRemains"], out var timeRemains))
+                return validTimeRemains > TimeSpan.Zero &&
+                       validTimeRemains > TimeSpan.FromMinutes(timeRemains);
+            
+            return false;
         }
 
         /// <summary>
@@ -190,7 +186,7 @@ namespace ProInUG.BlazorUI.Services
         /// Пустое состояние аутентификации
         /// </summary>
         /// <returns></returns>
-        private AuthenticationState GenerateEmptyAuthenticationState() =>
+        private static AuthenticationState GenerateEmptyAuthenticationState() =>
             new AuthenticationState(new ClaimsPrincipal());
     }
 }
