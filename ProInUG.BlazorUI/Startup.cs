@@ -31,7 +31,7 @@ namespace ProInUG.BlazorUI
                 .AddScoped<ProtectedLocalStorage>()
                 .AddScoped<AuthenticationStateProvider, CwAuthenticationStateProvider>()
                 .AddSingleton<ISystemClock, RealSystemClock>()
-                .AddSingleton<WeatherForecastService>() // TODO: долго таскаться будет?
+                .AddSingleton<WeatherForecastService>() // TODO: 
                 .AddMudServices();
         }
 
