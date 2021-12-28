@@ -20,8 +20,8 @@ namespace ProInUG.BlazorUI.Pages
 
         private Credentials credentials = new();
 
-        private bool isSubmitButtonDisabled;
-        private string loginResultMessage = "";
+        private bool _isSubmitButtonDisabled;
+        private string _loginResultMessage = "";
 
         private async Task LoginAsync(Credentials credentials)
         {
@@ -30,28 +30,28 @@ namespace ProInUG.BlazorUI.Pages
 
             var asp = (CwAuthenticationStateProvider)AuthenticationStateProvider;
 
-            isSubmitButtonDisabled = true;
+            _isSubmitButtonDisabled = true;
             var result = await asp.LoginAsync(credentials);
 
             if (result == 401)
             {
-                loginResultMessage = "Wrong username or password.";
-                ErrorMessageDialog(loginResultMessage);
-                isSubmitButtonDisabled = false;
+                _loginResultMessage = "Wrong username or password.";
+                ErrorMessageDialog(_loginResultMessage);
+                _isSubmitButtonDisabled = false;
                 return;
             }
 
             if (result != 0)
             {
-                loginResultMessage = "Error ocured while login.";
-                ErrorMessageDialog(loginResultMessage);
-                isSubmitButtonDisabled = false;
+                _loginResultMessage = "Error ocured while login.";
+                ErrorMessageDialog(_loginResultMessage);
+                _isSubmitButtonDisabled = false;
                 return;
             }
 
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
 
-            isSubmitButtonDisabled = false;
+            _isSubmitButtonDisabled = false;
 
             if (authState.User.Identity == null || NavigationManager == null)
                 return;
