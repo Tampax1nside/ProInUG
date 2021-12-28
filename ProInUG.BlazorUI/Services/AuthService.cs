@@ -32,8 +32,7 @@ namespace ProInUG.BlazorUI.Services
         /// <summary>
         /// Вход пользователя
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="password"></param>
+        /// <param name="credentials"></param>
         /// <returns></returns>
         public async Task<(int Error, TokenDto? Token)> LoginAsync(Credentials credentials)
         {
@@ -48,12 +47,9 @@ namespace ProInUG.BlazorUI.Services
                 },
                 uri);
 
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    var tokenDto = await response.Content.ReadAs<TokenDto>();
-                    return (0, tokenDto);
-                }
-                return ((int) response.StatusCode, null);
+                if (response.StatusCode != HttpStatusCode.OK) return ((int) response.StatusCode, null);
+                var tokenDto = await response.Content.ReadAs<TokenDto>();
+                return (0, tokenDto);
             }
             catch (Exception ex)
             {
@@ -75,12 +71,9 @@ namespace ProInUG.BlazorUI.Services
             {
                 var response = await _client.PostAsJson(null, uri, token.Jwt);
 
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    var tokenDto = await response.Content.ReadAs<TokenDto>();
-                    return (0, tokenDto);
-                }
-                return ((int)response.StatusCode, null);
+                if (response.StatusCode != HttpStatusCode.OK) return ((int) response.StatusCode, null);
+                var tokenDto = await response.Content.ReadAs<TokenDto>();
+                return (0, tokenDto);
             }
             catch (Exception ex)
             {
