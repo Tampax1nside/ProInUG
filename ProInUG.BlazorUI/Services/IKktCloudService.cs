@@ -31,5 +31,12 @@ namespace ProInUG.BlazorUI.Services
         /// <param name="pointId"></param>
         /// <returns></returns>
         Task DeletePaymentPointAsync(Guid pointId);
+
+        /// <summary>
+        /// Редактировать точку доступа
+        /// </summary>
+        /// <param name="paymentPoint"></param>
+        /// <returns></returns>
+        Task<int> EditPaymentPointAsync(PaymentPoint paymentPoint);
     }
 }

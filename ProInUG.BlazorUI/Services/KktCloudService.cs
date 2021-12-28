@@ -113,11 +113,9 @@ namespace ProInUG.BlazorUI.Services
         {
             var api = "v0.0";
             var uri = $"{api}/{PAYMENT_POINTS_ENDPOINT}/{pointId}";
-
             var jwt = GetJwt();
             if (string.IsNullOrEmpty(jwt))
                 return;
-
             try
             {
                 var response = await _client.DeleteAsJson(uri, null, jwt); // TODO: коммент в экстеншнах по этому поводу
@@ -131,6 +129,33 @@ namespace ProInUG.BlazorUI.Services
             {
                 _logger.LogError(ex, "Error deleting payment point.");
             }
+        }
+
+        /// <summary>
+        /// Редактировать точку доступа
+        /// </summary>
+        /// <param name="paymentPoint"></param>
+        /// <returns></returns>
+        public async Task<int> EditPaymentPointAsync(PaymentPoint paymentPoint)
+        {
+            var api = "v0.0";
+            var uri = $"{api}/{PAYMENT_POINTS_ENDPOINT}/{paymentPoint.Id}";
+            var jwt = GetJwt();
+            if (string.IsNullOrEmpty(jwt))
+                return (int) HttpStatusCode.Unauthorized;
+            try
+            {
+                var response = await _client.PatchAsJson(uri, paymentPoint, jwt);
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    await LogoutAsync();
+                return (int) response.StatusCode;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error editing payment point.");
+            }
+
+            return 1000;
         }
 
         private string? GetJwt()
