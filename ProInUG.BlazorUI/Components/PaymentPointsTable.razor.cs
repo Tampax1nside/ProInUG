@@ -20,7 +20,7 @@ namespace ProInUG.BlazorUI.Components
 
         #region Parameters
         [Parameter] public List<PaymentPoint> PaymentPoints { get; set; } = new();
-        
+       
         #endregion
 
         private string _searchString = "";
@@ -136,6 +136,9 @@ namespace ProInUG.BlazorUI.Components
             if (dialogMessage == null)
                 return;
             await dialogMessage.Result;
+
+            _itemsChanged = true;
+            await GetPaymentPointsAsync();
         }
 
         private async Task GetPaymentPointsAsync()
@@ -153,6 +156,7 @@ namespace ProInUG.BlazorUI.Components
             var points = await KktCloudService.GetPaymentPointsAsync();
             if (points != null)
                 PaymentPoints = points;
+            
             _loading = false;
         }
         

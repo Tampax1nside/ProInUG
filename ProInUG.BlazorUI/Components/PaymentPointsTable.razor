@@ -1,4 +1,5 @@
 ﻿@using ProInUG.BlazorUI.Models
+@using Microsoft.AspNetCore.Connections
 <MudTable Items="PaymentPoints" Loading="_loading" LoadingProgressColor="Color.Info" Filter="new Func<PaymentPoint, bool>(FilterFunc)">
     <ToolBarContent>
         <!-- добавить точку оплаты -->
@@ -16,14 +17,27 @@
         <MudTh>Device url</MudTh>
         <MudTh>Operator name</MudTh>
         <MudTh>Nomenclature</MudTh>
+        <MudTh>Taxation type</MudTh>
+        <MudTh>Tax rate</MudTh>
         <MudTh>Action</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
-        <MudTd DataLabel="Is Enable">@context.IsEnable</MudTd>
+        <MudTd DataLabel="Is Enable">
+            @if (@context.IsEnable)
+            {
+                <MudIcon Icon="@Icons.Material.Filled.Favorite" Color="Color.Primary"/>
+            }
+            else
+            {
+                <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder" Color="Color.Primary"/>
+            }
+        </MudTd>
         <MudTd DataLabel="Device url">@context.DeviceUri</MudTd>
         <MudTd DataLabel="Operator name">@context.OperatorName</MudTd>
         <MudTd DataLabel="Nomenclature">@context.NomenclatureName</MudTd>
+        <MudTd DataLabel="Taxation type">@context.TaxationType</MudTd>
+        <MudTd DataLabel="Tax rate">@context.TaxRate</MudTd>
         <MudTd DataLabel="Action">
             <!-- Edit PP button -->
             <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
