@@ -82,8 +82,32 @@ namespace ProInUG.BlazorUI.Pages
             var result = await editDialog.Result;
             if (result.Cancelled)
                 return;
-            // TODO: редактирование точки оплаты в сервисе
-            // var editingResponse = await KktCloudService
+           
+            var dialogProcess = ProcessMessageDialog("processing ...");
+
+            // TODO: удалить
+            await Task.Delay(5000);
+            var editingResponseStatusCode = await KktCloudService.EditPaymentPointAsync(point);
+            
+            dialogProcess?.Close();
+            
+            IDialogReference? dialogMessage;
+            
+            if (editingResponseStatusCode != 200)
+            {
+                dialogMessage = ErrorMessageDialog($"Editing PP error ocured. Status code: {editingResponseStatusCode}");
+                if (dialogMessage == null)
+                    return;
+                await dialogMessage.Result;
+                return;
+            }
+
+            dialogMessage = SuccessMessageDialog("PP edited successfully.");
+            if (dialogMessage == null)
+                return;
+            await dialogMessage.Result;
+
+            //await GetPaymentPointsAsync();
         }
 
         private async Task GetPaymentPointsAsync()
@@ -112,7 +136,7 @@ namespace ProInUG.BlazorUI.Pages
 
             if (!result.Cancelled)
             {
-                Guid.TryParse(result.Data.ToString(), out Guid pointId);
+                Guid.TryParse(result.Data.ToString(), out var pointId);
                 await KktCloudService.DeletePaymentPointAsync(pointId);
             }
 
