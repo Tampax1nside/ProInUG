@@ -1,0 +1,36 @@
+﻿@using ProInUG.BlazorUI.Models
+<MudTable Items="PaymentPoints" Loading="_loading" LoadingProgressColor="Color.Info" Filter="new Func<PaymentPoint, bool>(FilterFunc)">
+    <ToolBarContent>
+        <!-- добавить точку оплаты -->
+        <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" @onclick="CreatePaymentPointAsync" Class="ml-n2"/>
+        <MudText Typo="Typo.h6">Список точек оплаты</MudText>
+        <MudSpacer/>
+        <!-- Поиск -->
+        <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Поиск" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"/>
+
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Is Enable</MudTh>
+        <MudTh>Device url</MudTh>
+        <MudTh>Operator name</MudTh>
+        <MudTh>Nomenclature</MudTh>
+        <MudTh>Action</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Is Enable">@context.IsEnable</MudTd>
+        <MudTd DataLabel="Device url">@context.DeviceUri</MudTd>
+        <MudTd DataLabel="Operator name">@context.OperatorName</MudTd>
+        <MudTd DataLabel="Nomenclature">@context.NomenclatureName</MudTd>
+        <MudTd DataLabel="Action">
+            <!-- Edit PP button -->
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
+                       @onclick="() => EditPaymentPointAsync(context)">Edit</MudButton>
+            <!-- Delete PP button -->
+            <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
+                       @onclick="() => DeletePaymentPointAsync(context)">Delete</MudButton>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
