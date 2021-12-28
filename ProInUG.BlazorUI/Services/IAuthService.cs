@@ -9,8 +9,7 @@ namespace ProInUG.BlazorUI.Services
         /// <summary>
         /// Вход пользователя
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="password"></param>
+        /// <param name="credentials"></param>
         /// <returns></returns>
         Task<(int Error, TokenDto? Token)> LoginAsync(Credentials credentials);
 
