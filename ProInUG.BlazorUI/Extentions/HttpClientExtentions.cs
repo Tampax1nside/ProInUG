@@ -49,24 +49,46 @@ namespace ProInUG.BlazorUI.Extentions
             return client.SendAsync(httpreq);
         }
 
-        public static Task<HttpResponseMessage> DeleteAsJson(this HttpClient client, string uri, object? content = default, string jwt = "", string requestId = "")
+        public static Task<HttpResponseMessage> DeleteAsJson(this HttpClient client, string uri,
+            object? content = default, string jwt = "", string requestId = "")
         {
-            var httpreq = new HttpRequestMessage(HttpMethod.Delete, uri)
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri)
             {
                 Content = new StringContent(JsonSerializer.Serialize(content), Encoding.UTF8, "application/json"),
             };
 
             if (!string.IsNullOrEmpty(jwt))
             {
-                httpreq.Headers.Add("Authorization", "Bearer " + jwt);
+                httpRequestMessage.Headers.Add("Authorization", "Bearer " + jwt);
             }
 
             if (!string.IsNullOrEmpty(requestId))
             {
-                httpreq.Headers.Add("Request-id", requestId);
+                httpRequestMessage.Headers.Add("Request-id", requestId);
             }
 
-            return client.SendAsync(httpreq);
+            return client.SendAsync(httpRequestMessage);
+        }
+
+        public static Task<HttpResponseMessage> PatchAsJson(this HttpClient client, string uri,
+            object? content = default, string jwt = "", string requestId = "")
+        {
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri)
+            {
+                Content = new StringContent(JsonSerializer.Serialize(content), Encoding.UTF8, "application/json"),
+            };
+
+            if (!string.IsNullOrEmpty(jwt))
+            {
+                httpRequestMessage.Headers.Add("Authorization", "Bearer " + jwt);
+            }
+
+            if (!string.IsNullOrEmpty(requestId))
+            {
+                httpRequestMessage.Headers.Add("Request-id", requestId);
+            }
+
+            return client.SendAsync(httpRequestMessage);
         }
 
         public static async Task<T?> ReadAs<T>(this HttpContent responseContent) where T : class
