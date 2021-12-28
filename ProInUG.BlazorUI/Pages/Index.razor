@@ -1,37 +1,6 @@
 ﻿@page "/"
 @attribute [Authorize]
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge">
-    <MudText Typo="Typo.h4" Class="my-1">Payment points list</MudText>
-    <!-- Get PPs button -->
-    <MudButton Variant="Variant.Filled" Color="Color.Dark" @onclick="GetPaymentPointsAsync">Get payment points</MudButton>
-    <!-- Create PP button -->
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="CreatePaymentPointAsync">Add new point</MudButton>
-    <!-- Logout buttons -->
-    <MudButton Variant="Variant.Filled" Color="Color.Warning" @onclick="LogoutAsync">Logout</MudButton>
-    <br />
-    <br />
-    <MudTable Items="@_paymentPoints">
-        <HeaderContent>
-            <MudTh>Id</MudTh>
-            <MudTh>Is Enable</MudTh>
-            <MudTh>Device url</MudTh>
-            <MudTh>Operator name</MudTh>
-            <MudTh>Action</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Id">@context.Id</MudTd>
-            <MudTd DataLabel="Is Enable">@context.IsEnable</MudTd>
-            <MudTd DataLabel="Device url">@context.DeviceUri</MudTd>
-            <MudTd DataLabel="Operator name">@context.OperatorName</MudTd>
-            <MudTd DataLabel="Action">
-                <!-- Edit PP button -->
-                <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
-                           @onclick="() => EditPaymentPointAsync(context)">Edit</MudButton>
-                <!-- Delete PP button -->
-                <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
-                           @onclick="() => DeletePaymentPointAsync(context)">Delete</MudButton>
-            </MudTd>
-        </RowTemplate>
-    </MudTable>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mt-2">
+    <PaymentPointsTable/>
 </MudContainer>
