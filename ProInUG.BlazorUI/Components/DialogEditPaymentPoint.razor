@@ -1,38 +1,47 @@
 ﻿@using ProInUG.BlazorUI.Models
 
 <MudDialog>
-
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1" />
+            @MudDialog?.Title
+        </MudText>
+    </TitleContent>
     <DialogContent>
-        <EditForm id="form" Model="@paymentPoint" OnValidSubmit="@(()=>CreatePaymentPoint())">
-            <DataAnnotationsValidator />
+        @if (!string.IsNullOrEmpty(TextContent))
+        {
+            <MudText Align="Align.Left">@TextContent</MudText>   
+        }
+        <EditForm id="form" Model="@PaymentPoint" OnValidSubmit="@(CreatePaymentPoint)">
+            <DataAnnotationsValidator/>
             <!-- device url -->
             <MudTextField id="device-url" Label="Device Url" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                          @bind-Value="paymentPoint.DeviceUri" For="(() => paymentPoint.DeviceUri)" />
+                          @bind-Value="PaymentPoint.DeviceUri" For="(() => PaymentPoint.DeviceUri)"/>
             <!-- is enabled -->
-            <MudCheckBox @bind-Checked="@paymentPoint.IsEnable" Label="Enable"></MudCheckBox>
+            <MudCheckBox @bind-Checked="@PaymentPoint.IsEnable" Label="Enable"></MudCheckBox>
             <!-- payment address -->
             <MudTextField Label="Payment address" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                          @bind-Value="paymentPoint.PaymentAddress" For="(() => paymentPoint.PaymentAddress)" />
+                          @bind-Value="PaymentPoint.PaymentAddress" For="(() => PaymentPoint.PaymentAddress)"/>
             <!-- payment address -->
             <MudTextField Label="Operator name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                          @bind-Value="paymentPoint.OperatorName" For="(() => paymentPoint.OperatorName)" />
+                          @bind-Value="PaymentPoint.OperatorName" For="(() => PaymentPoint.OperatorName)"/>
             <!-- payment address -->
             <MudTextField Label="Nomenclature name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                          @bind-Value="paymentPoint.NomenclatureName" For="(() => paymentPoint.NomenclatureName)" />
+                          @bind-Value="PaymentPoint.NomenclatureName" For="(() => PaymentPoint.NomenclatureName)"/>
             <!-- taxation type -->
             <MudSelect T="@TaxationType" Variant="Variant.Outlined" Margin="Margin.Dense"
-                       @bind-Value="paymentPoint.TaxationType">
+                       @bind-Value="PaymentPoint.TaxationType">
                 @foreach (var value in Enum.GetValues<TaxationType>())
                 {
-                    <MudSelectItem Value="@value" />
+                    <MudSelectItem Value="@value"/>
                 }
             </MudSelect>
             <!-- taxation type -->
             <MudSelect T="@TaxRate" Variant="Variant.Outlined" Margin="Margin.Dense"
-                       @bind-Value="paymentPoint.TaxRate">
+                       @bind-Value="PaymentPoint.TaxRate">
                 @foreach (var value in Enum.GetValues<TaxRate>())
                 {
-                    <MudSelectItem Value="@value" />
+                    <MudSelectItem Value="@value"/>
                 }
             </MudSelect>
         </EditForm>
@@ -41,8 +50,8 @@
     <DialogActions>
         <!-- cancel -->
         <MudButton ButtonType="ButtonType.Button" Variant="Variant.Text" Color="Color.Error" Class="ml-auto"
-                   @onclick="@(() => Cancel())">
-            Cancel
+                   @onclick="@(Cancel)">
+            Отмена
         </MudButton>
         <!-- submit -->
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" form="form"

@@ -10,15 +10,14 @@ namespace ProInUG.BlazorUI.Components
 {
     public partial class DialogEditPaymentPoint
     {
-        [CascadingParameter]
-        MudDialogInstance? MudDialog { get; set; }
+        [CascadingParameter] private MudDialogInstance? MudDialog { get; set; }
 
-        [Parameter]
-        public PaymentPoint paymentPoint { get; set; } = new();
+        [Parameter] public PaymentPoint PaymentPoint { get; set; } = new();
 
-        [Parameter]
-        public string SubmitButtonName { get; set; } = "Create";
+        [Parameter] public string SubmitButtonName { get; set; } = "Create";
 
+        [Parameter] public string TextContent { get; set; } = "";
+        
         private void Cancel()
         {
             if (MudDialog != null)
@@ -28,7 +27,7 @@ namespace ProInUG.BlazorUI.Components
         private void CreatePaymentPoint()
         {
             if (MudDialog != null)
-                MudDialog.Close(DialogResult.Ok(paymentPoint));
+                MudDialog.Close(DialogResult.Ok(PaymentPoint));
         }
     }
 }
