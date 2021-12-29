@@ -18,20 +18,20 @@ namespace ProInUG.BlazorUI.Services
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        Task<(int Error, AccountDto Account)> CreateAccount(AccountDto account);
+        Task<(int Error, AccountDto? Account)> CreateAccount(AccountDto account);
         
         /// <summary>
         /// Изменить аккаунт
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        Task<(int Error, AccountDto Account)> UpdateAccount(AccountDto account);
+        Task<(int Error, AccountDto? Account)> UpdateAccount(AccountDto account);
         
         /// <summary>
         /// Получить все аккаунты
         /// </summary>
         /// <returns></returns>
-        Task<(int Error, List<AccountDto> Account)> GetAccounts();
+        Task<(int Error, List<AccountDto>? Account)> GetAccounts();
         
         /// <summary>
         /// Удалить аккаунт

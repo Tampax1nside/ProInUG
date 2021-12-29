@@ -17,7 +17,9 @@ namespace ProInUG.BlazorUI.Services
     public class UsersService : IUsersService
     {
         private const string API = "api";
-        private const string ACCOUNT_ENDPOINT = "/Account";
+        private const string ACCOUNT_ENDPOINT = "Account";
+        private const string ALL_ACCOUNTS_ENDPOINT = "Account/Current";
+        private const string PASSWORD_ENDPOINT = "Account/password";
         
         private readonly HttpClient _client;
         private readonly ILogger<UsersService> _logger;
@@ -52,6 +54,7 @@ namespace ProInUG.BlazorUI.Services
                 var jwt = GetJwt();
                 if (string.IsNullOrEmpty(jwt))
                     return ((int) HttpStatusCode.Unauthorized, null);
+                
                 var response = await _client.SendAsJson(HttpMethod.Get, null, uri, jwt);
                 if (response.IsSuccessStatusCode)
                 {
@@ -72,29 +75,182 @@ namespace ProInUG.BlazorUI.Services
             return (1000, null);
         }
 
-        public Task<(int Error, AccountDto Account)> CreateAccount(AccountDto account)
+        /// <summary>
+        /// Создать новый аккаунт
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public async Task<(int Error, AccountDto? Account)> CreateAccount(AccountDto account)
         {
-            throw new System.NotImplementedException();
+            var uri = $"{API}/{ACCOUNT_ENDPOINT}";
+            try
+            {
+                _logger.LogDebug($"Запрос API на создание нового аккаунта по Uri: {uri}");
+                var jwt = GetJwt();
+                if (string.IsNullOrEmpty(jwt))
+                    return ((int) HttpStatusCode.Unauthorized, null);
+                
+                var response = await _client.SendAsJson(HttpMethod.Put, account, uri, jwt);
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadAs<AccountDto>();
+                    return (0, data);
+                }
+
+                if (response.StatusCode is HttpStatusCode.Forbidden or 
+                    HttpStatusCode.Unauthorized or 
+                    HttpStatusCode.InternalServerError or 
+                    HttpStatusCode.Conflict)
+                    return ((int) response.StatusCode, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Ошибка создания нового аккаунта.");
+            }
+            
+            return (1000, null);
         }
 
-        public Task<(int Error, AccountDto Account)> UpdateAccount(AccountDto account)
+        /// <summary>
+        /// Изменить аккаунт
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public async Task<(int Error, AccountDto? Account)> UpdateAccount(AccountDto account)
         {
-            throw new System.NotImplementedException();
+            var uri = $"{API}/{ACCOUNT_ENDPOINT}";
+            try
+            {
+                _logger.LogDebug($"Запрос API на редактирования аккаунта по Uri: {uri}");
+                var jwt = GetJwt();
+                if (string.IsNullOrEmpty(jwt))
+                    return ((int) HttpStatusCode.Unauthorized, null);
+                
+                var response = await _client.SendAsJson(HttpMethod.Patch, account, uri, jwt);
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadAs<AccountDto>();
+                    return (0, data);
+                }
+
+                if (response.StatusCode is HttpStatusCode.Forbidden or 
+                    HttpStatusCode.Unauthorized or 
+                    HttpStatusCode.InternalServerError or 
+                    HttpStatusCode.Conflict)
+                    return ((int) response.StatusCode, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Ошибка редактирования аккаунта.");
+            }
+            
+            return (1000, null);
+        }
+        
+        /// <summary>
+        /// Получить все аккаунты
+        /// </summary>
+        /// <returns></returns>
+        public async Task<(int Error, List<AccountDto>? Account)> GetAccounts()
+        {
+            var uri = $"{API}/{ALL_ACCOUNTS_ENDPOINT}";
+            try
+            {
+                _logger.LogDebug($"Запрос API получение списка всех аккаунтов по Uri: {uri}");
+                var jwt = GetJwt();
+                if (string.IsNullOrEmpty(jwt))
+                    return ((int) HttpStatusCode.Unauthorized, null);
+                
+                var response = await _client.SendAsJson(HttpMethod.Get, null, uri, jwt);
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = await response.Content.ReadAs<List<AccountDto>>();
+                    return (0, data);
+                }
+
+                if (response.StatusCode is HttpStatusCode.Forbidden or 
+                    HttpStatusCode.Unauthorized or 
+                    HttpStatusCode.InternalServerError or 
+                    HttpStatusCode.NoContent)
+                    return ((int) response.StatusCode, null);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Ошибка получения списка аккаунтов.");
+            }
+            
+            return (1000, null);
+        }
+        
+        /// <summary>
+        /// Удалить аккаунт
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteAccount(string userId)
+        {
+            var uri = $"{API}/{ACCOUNT_ENDPOINT}/id={userId}";
+            try
+            {
+                _logger.LogDebug($"Запрос API удаление аккаунта по Uri: {uri}");
+                var jwt = GetJwt();
+                if (string.IsNullOrEmpty(jwt))
+                    return (int) HttpStatusCode.Unauthorized;
+                
+                var response = await _client.SendAsJson(HttpMethod.Delete, null, uri, jwt);
+                if (response.IsSuccessStatusCode)
+                {
+                    return 0;
+                }
+
+                if (response.StatusCode is HttpStatusCode.Forbidden or 
+                    HttpStatusCode.Unauthorized or 
+                    HttpStatusCode.InternalServerError or 
+                    HttpStatusCode.NotFound)
+                    return (int) response.StatusCode;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Ошибка удаления аккаунта.");
+            }
+            
+            return 1000;
         }
 
-        public Task<(int Error, List<AccountDto> Account)> GetAccounts()
+        /// <summary>
+        /// Изменить пароль для аккаунта
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public async Task<int> ChangeUserPassword(string userId, string password)
         {
-            throw new System.NotImplementedException();
-        }
+            var uri = $"{API}/{PASSWORD_ENDPOINT}/accountid={userId}";
+            try
+            {
+                _logger.LogDebug($"Запрос API изменение пароля аккаунта по Uri: {uri}");
+                var jwt = GetJwt();
+                if (string.IsNullOrEmpty(jwt))
+                    return (int) HttpStatusCode.Unauthorized;
+                
+                var response = await _client.SendAsJson(HttpMethod.Patch, password, uri, jwt);
+                if (response.IsSuccessStatusCode)
+                {
+                    return 0;
+                }
 
-        public Task<int> DeleteAccount(string userId)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<int> ChangeUserPassword(string userId, string password)
-        {
-            throw new System.NotImplementedException();
+                if (response.StatusCode is HttpStatusCode.Forbidden or 
+                    HttpStatusCode.Unauthorized or 
+                    HttpStatusCode.InternalServerError or 
+                    HttpStatusCode.NotFound)
+                    return (int) response.StatusCode;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex, "Ошибка изменения пароля для аккаунта.");
+            }
+            
+            return 1000;
         }
         
         // TODO: в вдух местах один код - исправить
