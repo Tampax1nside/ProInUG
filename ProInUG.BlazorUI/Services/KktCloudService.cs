@@ -165,9 +165,7 @@ namespace ProInUG.BlazorUI.Services
         private string? GetJwt()
         {
             var asp = (CwAuthenticationStateProvider)_authenticationStateProvider;
-            if (asp.TokenDto == null)
-                return null;
-            return asp.TokenDto.Jwt;
+            return asp.TokenDto?.Jwt;
         }
 
         private async Task LogoutAsync()
