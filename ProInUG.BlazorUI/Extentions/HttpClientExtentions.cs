@@ -9,92 +9,34 @@ namespace ProInUG.BlazorUI.Extentions
     public static class HttpClientExtentions
     {
         private static readonly Random Rnd = new Random();
-
-        // TODO: тут если честно тоже повторяемость кода которая пока мне не очень, может как-то убрать?
-        // добавить параметр HttpMethod а остальное примерно одинаково. И назвать SendAsJson
-        public static Task<HttpResponseMessage> PostAsJson(this HttpClient client, object? content, string uri, string jwt = "", string requestId = "")
+        
+        public static Task<HttpResponseMessage> SendAsJson(this HttpClient client, HttpMethod method, 
+            object? content, string uri, string jwt = "", string requestId = "")
         {
-            var httpreq = new HttpRequestMessage(HttpMethod.Post, uri)
+            var httpRequest = new HttpRequestMessage(method, uri)
             {
                 Content = new StringContent(JsonSerializer.Serialize(content), Encoding.UTF8, "application/json"),
             };
 
             if (!string.IsNullOrEmpty(jwt))
             {
-                httpreq.Headers.Add("Authorization", "Bearer " + jwt);
+                httpRequest.Headers.Add("Authorization", "Bearer " + jwt);
             }
 
             if (!string.IsNullOrEmpty(requestId))
             {
-                httpreq.Headers.Add("Request-id", requestId);
+                httpRequest.Headers.Add("Request-id", requestId);
             }
 
-            return client.SendAsync(httpreq);
+            return client.SendAsync(httpRequest);
         }
-
-        public static Task<HttpResponseMessage> GetAsJson(this HttpClient client, string uri, string jwt = "", string requestId = "")
-        {
-            var httpreq = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            if (!string.IsNullOrEmpty(jwt))
-            {
-                httpreq.Headers.Add("Authorization", "Bearer " + jwt);
-            }
-
-            if (!string.IsNullOrEmpty(requestId))
-            {
-                httpreq.Headers.Add("Request-id", requestId);
-            }
-
-            return client.SendAsync(httpreq);
-        }
-
-        public static Task<HttpResponseMessage> DeleteAsJson(this HttpClient client, string uri,
-            object? content = default, string jwt = "", string requestId = "")
-        {
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri)
-            {
-                Content = new StringContent(JsonSerializer.Serialize(content), Encoding.UTF8, "application/json"),
-            };
-
-            if (!string.IsNullOrEmpty(jwt))
-            {
-                httpRequestMessage.Headers.Add("Authorization", "Bearer " + jwt);
-            }
-
-            if (!string.IsNullOrEmpty(requestId))
-            {
-                httpRequestMessage.Headers.Add("Request-id", requestId);
-            }
-
-            return client.SendAsync(httpRequestMessage);
-        }
-
-        public static Task<HttpResponseMessage> PatchAsJson(this HttpClient client, string uri,
-            object? content = default, string jwt = "", string requestId = "")
-        {
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri)
-            {
-                Content = new StringContent(JsonSerializer.Serialize(content), Encoding.UTF8, "application/json"),
-            };
-
-            if (!string.IsNullOrEmpty(jwt))
-            {
-                httpRequestMessage.Headers.Add("Authorization", "Bearer " + jwt);
-            }
-
-            if (!string.IsNullOrEmpty(requestId))
-            {
-                httpRequestMessage.Headers.Add("Request-id", requestId);
-            }
-
-            return client.SendAsync(httpRequestMessage);
-        }
-
+        
         public static async Task<T?> ReadAs<T>(this HttpContent responseContent) where T : class
         {
             var jsonStream = await responseContent.ReadAsStreamAsync();
-            return await JsonSerializer.DeserializeAsync<T>(jsonStream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return await JsonSerializer.DeserializeAsync<T>(
+                jsonStream, 
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
         /// <summary>
