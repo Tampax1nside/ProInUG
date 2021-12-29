@@ -11,7 +11,7 @@ namespace ProInUG.BlazorUI.Services
         /// Получить текущий аккаунт
         /// </summary>
         /// <returns></returns>
-        Task<(int Error, AccountDto Account)> GetCurrentAccount();
+        Task<(int Error, AccountDto? Account)> GetCurrentAccount();
 
         /// <summary>
         /// Создать новый аккаунт
