@@ -1,0 +1,6 @@
+﻿@using System.Security.Claims
+
+<MudIcon Icon="@Icons.Material.Filled.VerifiedUser" Class="mr-2"></MudIcon>
+<MudText Typo="Typo.inherit" Class="mr-4">@_user?.Identity?.Name</MudText>
+<MudText Typo="Typo.inherit" Class="mr-2">@_claims.Where(u=>u.Type == ClaimTypes.Role).FirstOrDefault()?.Value</MudText>
+<MudButton Style="text-transform:none" Color="Color.Inherit" OnClick="LogoutAsync">Выйти</MudButton>
