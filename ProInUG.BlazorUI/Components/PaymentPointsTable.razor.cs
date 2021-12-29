@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -12,20 +13,17 @@ namespace ProInUG.BlazorUI.Components
     public partial class PaymentPointsTable
     {
         #region DI
-        [Inject] public AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
+        //[Inject] public AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
         [Inject] public IKktCloudService? KktCloudService { get; set; }
         [Inject] public IDialogService? DialogService { get; set; }
         
         #endregion
-
-        #region Parameters
-        [Parameter] public List<PaymentPoint> PaymentPoints { get; set; } = new();
-       
-        #endregion
-
+        
         private string _searchString = "";
         private bool _loading;
         private bool _itemsChanged;
+
+        private List<PaymentPointsTableModel> _points = new();
 
         protected override async Task OnInitializedAsync()
         {
@@ -51,10 +49,9 @@ namespace ProInUG.BlazorUI.Components
             if (!result.Cancelled && Guid.TryParse(result.Data.ToString(), out var pointId))
             {
                 await KktCloudService.DeletePaymentPointAsync(pointId);
+                _itemsChanged = true;
+                await GetPaymentPointsAsync();
             }
-
-            _itemsChanged = true;
-            await GetPaymentPointsAsync();
         }
         
         /// <summary>
@@ -102,6 +99,10 @@ namespace ProInUG.BlazorUI.Components
             await GetPaymentPointsAsync();
         }
 
+        /// <summary>
+        /// Отредактировать точку оплаты
+        /// </summary>
+        /// <param name="point"></param>
         private async Task EditPaymentPointAsync(PaymentPoint point)
         {
             if (KktCloudService == null)
@@ -142,6 +143,9 @@ namespace ProInUG.BlazorUI.Components
             await GetPaymentPointsAsync();
         }
 
+        /// <summary>
+        /// Поулчить все PP
+        /// </summary>
         private async Task GetPaymentPointsAsync()
         {
             if (KktCloudService == null)
@@ -161,8 +165,15 @@ namespace ProInUG.BlazorUI.Components
             
             // Success
             if (error == 0 && points != null)
-                PaymentPoints = points;
-            
+            {
+                _points?.Clear();
+                foreach (var point in points)
+                {
+                    var pp = new PaymentPointsTableModel {Point = point};
+                    _points?.Add(pp);
+                }
+            }
+
             // Finished with error
             if (error != 0)
             {
@@ -175,6 +186,11 @@ namespace ProInUG.BlazorUI.Components
             }
         }
         
+        /// <summary>
+        /// Диалоговое окно редактирования PP
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         private IDialogReference? ShowEditDialog(PaymentPoint point)
         {
             DialogOptions options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
@@ -182,6 +198,11 @@ namespace ProInUG.BlazorUI.Components
             return DialogService?.Show<DialogEditPaymentPoint>("Редактирование точки оплаты", parameters, options);
         }
         
+        /// <summary>
+        /// Диалоговое окно удаления PP
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         private IDialogReference? ShowDeleteDialog(PaymentPoint point)
         {
             DialogOptions options = new DialogOptions() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
@@ -189,6 +210,10 @@ namespace ProInUG.BlazorUI.Components
             return DialogService?.Show<DialogDeletePaymentPoint>("Delete Payment Point", parameters, options);
         }
         
+        /// <summary>
+        /// Диалоговое окно создания PP
+        /// </summary>
+        /// <returns></returns>
         private IDialogReference? ShowCreateDialog()
         {
             DialogOptions options = new() { MaxWidth = MaxWidth.ExtraSmall, FullWidth = true };
@@ -196,13 +221,25 @@ namespace ProInUG.BlazorUI.Components
             return DialogService?.Show<DialogEditPaymentPoint>("Создание точки оплаты", parameters, options);
         }
         
+        /// <summary>
+        /// Показать Processing диалог
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private IDialogReference? ShowProcessDialog(string message)
         {
+            // TODO: покрасивее как-то надо придумать
             DialogOptions options = new() { DisableBackdropClick = true };
             var parameters = new DialogParameters {{"ContentText", message}};
             return DialogService?.Show<DialogProcess>("In progress", parameters, options);
         }
         
+        /// <summary>
+        /// Показать диалог с ошибкой
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private IDialogReference? ShowErrorDialog(string title, string message)
         {
             DialogOptions options = new() { CloseButton = true };
@@ -215,6 +252,11 @@ namespace ProInUG.BlazorUI.Components
             return DialogService?.Show<DialogLoginPage>(title, parameters, options);
         }
 
+        /// <summary>
+        /// Показать диалог - успешное выполнение
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private IDialogReference? ShowSuccessDialog(string message)
         {
             DialogOptions options = new() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
@@ -227,12 +269,34 @@ namespace ProInUG.BlazorUI.Components
             return DialogService?.Show<DialogLoginPage>("Creating PP Success", parameters, options);
         }
 
-        private bool FilterFunc(PaymentPoint point)
+        /// <summary>
+        /// Фильтрация элементов таблицы
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        private bool FilterFunc(PaymentPointsTableModel point)
         {
             if (string.IsNullOrWhiteSpace(_searchString))
                 return true;
-            return point.DeviceUri.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
-                   point.OperatorName.Contains(_searchString, StringComparison.OrdinalIgnoreCase);
+            return point.Point.DeviceUri.Contains(_searchString, StringComparison.OrdinalIgnoreCase) || 
+                   point.Point.OperatorName.Contains(_searchString, StringComparison.OrdinalIgnoreCase);
         }
+
+        /// <summary>
+        /// Показать / скрыть детали выбранной точки в таблице
+        /// </summary>
+        /// <param name="id"></param>
+        private void DetailsButtonPress(Guid id)
+        {
+            // TODO: должна ходить на API и получать детали об этой точке
+            var point = _points.FirstOrDefault(p => p.Point.Id == id);
+            if (point != null) point.ShowDetails = !point.ShowDetails;
+        }
+    }
+
+    public class PaymentPointsTableModel
+    {
+        public bool ShowDetails { get; set; }
+        public PaymentPoint Point { get; set; } = new();
     }
 }

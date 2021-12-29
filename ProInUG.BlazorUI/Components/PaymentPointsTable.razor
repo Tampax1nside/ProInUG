@@ -1,6 +1,9 @@
-﻿@using ProInUG.BlazorUI.Models
+﻿@* @using ProInUG.BlazorUI.Models *@
 @using Microsoft.AspNetCore.Connections
-<MudTable Items="PaymentPoints" Loading="_loading" LoadingProgressColor="Color.Info" Filter="new Func<PaymentPoint, bool>(FilterFunc)" SortLabel="Sort By">
+<MudTable Items="_points" Loading="_loading" 
+          LoadingProgressColor="Color.Info" 
+          Filter="new Func<PaymentPointsTableModel, bool>(FilterFunc)" 
+          SortLabel="Sort By">
     <ToolBarContent>
         <!-- добавить точку оплаты -->
         <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" @onclick="CreatePaymentPointAsync" Class="ml-n2"/>
@@ -13,18 +16,18 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.IsEnable)">Enabled</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.DeviceUri)">Device url</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.OperatorName)">Operator name</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.NomenclatureName)">Nomenclature</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.TaxationType)">Taxation type</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.TaxRate)">Tax rate</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.IsEnable)">Enabled</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.DeviceUri)">Device url</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.OperatorName)">Operator name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.NomenclatureName)">Nomenclature</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.TaxationType)">Taxation type</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.TaxRate)">Tax rate</MudTableSortLabel></MudTh>
         <MudTh>Action</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Id">@context.Point.Id</MudTd>
         <MudTd DataLabel="Is Enable">
-            @if (@context.IsEnable)
+            @if (@context.Point.IsEnable)
             {
                 <MudIcon Icon="@Icons.Material.Filled.Favorite" Color="Color.Primary"/>
             }
@@ -33,18 +36,43 @@
                 <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder" Color="Color.Primary"/>
             }
         </MudTd>
-        <MudTd DataLabel="Device url">@context.DeviceUri</MudTd>
-        <MudTd DataLabel="Operator name">@context.OperatorName</MudTd>
-        <MudTd DataLabel="Nomenclature">@context.NomenclatureName</MudTd>
-        <MudTd DataLabel="Taxation type">@context.TaxationType</MudTd>
-        <MudTd DataLabel="Tax rate">@context.TaxRate</MudTd>
+        <MudTd DataLabel="Device url">@context.Point.DeviceUri</MudTd>
+        <MudTd DataLabel="Operator name">@context.Point.OperatorName</MudTd>
+        <MudTd DataLabel="Nomenclature">@context.Point.NomenclatureName</MudTd>
+        <MudTd DataLabel="Taxation type">@context.Point.TaxationType</MudTd>
+        <MudTd DataLabel="Tax rate">@context.Point.TaxRate</MudTd>
         <MudTd DataLabel="Action">
-            <!-- Edit PP button -->
-            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
-                       @onclick="() => EditPaymentPointAsync(context)">Edit</MudButton>
-            <!-- Delete PP button -->
-            <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
-                       @onclick="() => DeletePaymentPointAsync(context)">Delete</MudButton>
+            <!-- Детали кнопка -->
+            <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Class="px-2 mx-1"
+                       @onclick="() => DetailsButtonPress(context.Point.Id)">
+                Details
+            </MudButton>
+            <!-- Редактировать кнопка -->
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" Class="mx-1"
+                       @onclick="() => EditPaymentPointAsync(context.Point)">Edit</MudButton>
+            <!-- Удалить кнопка -->
+            <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="mx-1"
+                       @onclick="() => DeletePaymentPointAsync(context.Point)">Delete</MudButton>
         </MudTd>
     </RowTemplate>
+    <ChildRowContent>
+        @if (context.ShowDetails)
+        {
+            <MudTr>
+                <td colspan="6">
+                    <MudCard Elevation="0">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.body1">Детали для точки оплаты <strong>@context.Point.Id</strong></MudText>
+                            </CardHeaderContent>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudText Class="mb-1">Адрес Url: @context.Point.DeviceUri</MudText>
+                            <MudText Class="mb-1">Оператор: @context.Point.OperatorName</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </td>
+            </MudTr>
+        }
+    </ChildRowContent>
 </MudTable>
