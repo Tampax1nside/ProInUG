@@ -1,0 +1,15 @@
+﻿<MudTable Items="_usersList" Loading="_loading" 
+          LoadingProgressColor="Color.Info">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Список пользователей</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Id</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Action</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.User.Id</MudTd>
+        <MudTd DataLabel="Name">@context.User.Name</MudTd>
+    </RowTemplate>
+</MudTable>
