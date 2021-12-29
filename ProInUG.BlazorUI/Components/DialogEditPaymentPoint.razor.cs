@@ -18,16 +18,8 @@ namespace ProInUG.BlazorUI.Components
 
         [Parameter] public string TextContent { get; set; } = "";
         
-        private void Cancel()
-        {
-            if (MudDialog != null)
-                MudDialog.Cancel();
-        }
+        private void Cancel() => MudDialog?.Cancel();
 
-        private void CreatePaymentPoint()
-        {
-            if (MudDialog != null)
-                MudDialog.Close(DialogResult.Ok(PaymentPoint));
-        }
+        private void Submit() => MudDialog?.Close(DialogResult.Ok(PaymentPoint));
     }
 }

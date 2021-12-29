@@ -12,7 +12,7 @@
         {
             <MudText Align="Align.Left">@TextContent</MudText>   
         }
-        <EditForm id="form" Model="@PaymentPoint" OnValidSubmit="@(CreatePaymentPoint)">
+        <EditForm id="form" Model="@PaymentPoint" OnValidSubmit="@(Submit)">
             <DataAnnotationsValidator/>
             <!-- device url -->
             <MudTextField id="device-url" Label="Device Url" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
@@ -22,10 +22,10 @@
             <!-- payment address -->
             <MudTextField Label="Payment address" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
                           @bind-Value="PaymentPoint.PaymentAddress" For="(() => PaymentPoint.PaymentAddress)"/>
-            <!-- payment address -->
+            <!-- operator name -->
             <MudTextField Label="Operator name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
                           @bind-Value="PaymentPoint.OperatorName" For="(() => PaymentPoint.OperatorName)"/>
-            <!-- payment address -->
+            <!-- nomenclature name -->
             <MudTextField Label="Nomenclature name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
                           @bind-Value="PaymentPoint.NomenclatureName" For="(() => PaymentPoint.NomenclatureName)"/>
             <!-- taxation type -->
