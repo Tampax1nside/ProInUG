@@ -59,9 +59,9 @@ namespace ProInUG.BlazorUI.Services
                     return (0, data);
                 }
 
-                if (response.StatusCode == HttpStatusCode.Forbidden ||
-                    response.StatusCode == HttpStatusCode.Unauthorized ||
-                    response.StatusCode == HttpStatusCode.InternalServerError)
+                if (response.StatusCode is HttpStatusCode.Forbidden or 
+                    HttpStatusCode.Unauthorized or 
+                    HttpStatusCode.InternalServerError)
                     return ((int) response.StatusCode, null);
             }
             catch (Exception ex)
