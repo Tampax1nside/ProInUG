@@ -20,7 +20,7 @@
                           @bind-Value="User.Name" For="(() => User.Name)" Class="mt-3"/>
             <!-- password -->
             <MudTextField id="c-password" Label="Password" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                          @bind-Value="User.Password" For="(() => User.Description)" InputType="InputType.Password" Class="mt-3"/>
+                          @bind-Value="User.Password" For="(() => User.Password)" InputType="InputType.Password" Class="mt-3"/>
             <!-- user role -->
             <MudSelect T="@Roles" Variant="Variant.Outlined" Margin="Margin.Dense"
                        @bind-Value="User.Role" Class="mt-5">
