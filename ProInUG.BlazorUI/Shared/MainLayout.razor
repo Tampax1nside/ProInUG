@@ -10,8 +10,11 @@
             <MudAvatar Square="true" Variant="Variant.Outlined" Color="Color.Inherit">P</MudAvatar>
             <MudText Typo="Typo.h5" Class="ml-3">Pro in UG</MudText>
             <MudSpacer/>
+            <AuthorizeView>
+                <AuthorizedUserMenu/>
+            </AuthorizeView>
             <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End"/>
-        </MudAppBar>
+    </MudAppBar>
         <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
             @*NavMenu*@
         </MudDrawer>
