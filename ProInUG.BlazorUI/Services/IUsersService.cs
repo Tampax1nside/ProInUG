@@ -18,7 +18,7 @@ namespace ProInUG.BlazorUI.Services
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        Task<(int Error, AccountDto? Account)> CreateAccount(AccountDto account);
+        Task<(int Error, AccountDto? Account)> CreateAccount(CreateAccountDto account);
         
         /// <summary>
         /// Изменить аккаунт

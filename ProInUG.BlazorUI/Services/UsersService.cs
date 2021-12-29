@@ -80,7 +80,7 @@ namespace ProInUG.BlazorUI.Services
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public async Task<(int Error, AccountDto? Account)> CreateAccount(AccountDto account)
+        public async Task<(int Error, AccountDto? Account)> CreateAccount(CreateAccountDto account)
         {
             var uri = $"{API}/{ACCOUNT_ENDPOINT}";
             try
