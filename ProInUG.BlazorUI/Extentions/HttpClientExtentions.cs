@@ -101,7 +101,7 @@ namespace ProInUG.BlazorUI.Extentions
         /// Сгенерировать Id запроса
         /// </summary>
         /// <returns></returns>
-        internal static string GenerateRequestId()
+        public static string GenerateRequestId(this HttpClient client)
         {
             var rndBuff = new byte[8];
             Rnd.NextBytes(rndBuff);

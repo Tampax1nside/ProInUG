@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme="currentTheme"/>
 <MudDialogProvider />
 <MudSnackbarProvider />
 
@@ -13,6 +13,7 @@
             <AuthorizeView>
                 <AuthorizedUserMenu/>
             </AuthorizeView>
+            <MudIconButton Icon="@Icons.Material.Filled.Brightness4" OnClick="DarkMode"></MudIconButton>
             <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End"/>
     </MudAppBar>
         <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
@@ -29,10 +30,62 @@
 </MudLayout>
 
 @code {
-    bool _drawerOpen = true;
-
+    private bool _drawerOpen = true;
+    
+    // боковое меню скрыть/показать
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
+    
+    protected override void OnInitialized()
+    {
+        currentTheme = defaultTheme;
+    }
+    
+    void DarkMode()
+    {
+        if (currentTheme == defaultTheme)
+            currentTheme = darkTheme;
+        else
+            currentTheme = defaultTheme;
+    }
+    
+    MudTheme currentTheme = new MudTheme();
+    MudTheme defaultTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#272c34"
+        }
+    };
+    
+    MudTheme darkTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#27272f",
+            Background = "#32333d",
+            BackgroundGrey = "#27272f",
+            Surface = "#373740",
+            DrawerBackground = "#27272f",
+            DrawerText = "rgba(255,255,255, 0.50)",
+            DrawerIcon = "rgba(255,255,255, 0.50)",
+            AppbarBackground = "#27272f",
+            AppbarText = "rgba(255,255,255, 0.70)",
+            TextPrimary = "rgba(255,255,255, 0.70)",
+            TextSecondary = "rgba(255,255,255, 0.50)",
+            ActionDefault = "#adadb1",
+            ActionDisabled = "rgba(255,255,255, 0.26)",
+            ActionDisabledBackground = "rgba(255,255,255, 0.12)",
+            Divider = "rgba(255,255,255, 0.12)",
+            DividerLight = "rgba(255,255,255, 0.06)",
+            TableLines = "rgba(255,255,255, 0.12)",
+            LinesDefault = "rgba(255,255,255, 0.12)",
+            LinesInputs = "rgba(255,255,255, 0.3)",
+            TextDisabled = "rgba(255,255,255, 0.2)",
+            Primary = "A4B494",
+            Success = "519872"
+        }
+    };
 }

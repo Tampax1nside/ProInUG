@@ -86,7 +86,7 @@ namespace ProInUG.BlazorUI.Components
 
             if (creatingResult == null)
             {
-                dialogMessage = ShowErrorDialog("Creating PP Error ocured.");
+                dialogMessage = ShowErrorDialog("Ошибка","Невозможно создать точку оплаты");
                 if (dialogMessage == null)
                     return;
                 await dialogMessage.Result;
@@ -125,7 +125,8 @@ namespace ProInUG.BlazorUI.Components
             
             if (editingResponseStatusCode != 200)
             {
-                dialogMessage = ShowErrorDialog($"Editing PP error ocured. Status code: {editingResponseStatusCode}");
+                dialogMessage = ShowErrorDialog("Ошибка",$"Невозможно отредактировать точку оплаты." +
+                                                         $"Код ошибки: {editingResponseStatusCode}");
                 if (dialogMessage == null)
                     return;
                 await dialogMessage.Result;
@@ -145,6 +146,7 @@ namespace ProInUG.BlazorUI.Components
         {
             if (KktCloudService == null)
                 return;
+            
             _loading = true;
             if (_itemsChanged)
             {
@@ -153,11 +155,24 @@ namespace ProInUG.BlazorUI.Components
             }
 
             await Task.Delay(1200); // TODO: убрать
-            var points = await KktCloudService.GetPaymentPointsAsync();
-            if (points != null)
+            
+            var (error, requestId, points) = await KktCloudService.GetPaymentPointsAsync();
+            _loading = false;
+            
+            // Success
+            if (error == 0 && points != null)
                 PaymentPoints = points;
             
-            _loading = false;
+            // Finished with error
+            if (error != 0)
+            {
+                var dialogMessage = ShowErrorDialog("Ошибка",$"Невозможно получить точки оплаты <br />" +
+                                                    $"Код ошибки: {error.ToString()} <br />" +
+                                                    $"Request Id: {requestId}");
+                if (dialogMessage == null)
+                    return;
+                await dialogMessage.Result;
+            }
         }
         
         private IDialogReference? ShowEditDialog(PaymentPoint point)
@@ -188,16 +203,16 @@ namespace ProInUG.BlazorUI.Components
             return DialogService?.Show<DialogProcess>("In progress", parameters, options);
         }
         
-        private IDialogReference? ShowErrorDialog(string message)
+        private IDialogReference? ShowErrorDialog(string title, string message)
         {
             DialogOptions options = new() { CloseButton = true };
             var parameters = new DialogParameters
             {
                 {"ContentText", message},
-                {"ButtonText", "Close"},
+                {"ButtonText", "Закрыть"},
                 {"Color", Color.Error}
             };
-            return DialogService?.Show<DialogLoginPage>("Creating PP Error", parameters, options);
+            return DialogService?.Show<DialogLoginPage>(title, parameters, options);
         }
 
         private IDialogReference? ShowSuccessDialog(string message)

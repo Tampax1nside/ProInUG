@@ -75,33 +75,37 @@ namespace ProInUG.BlazorUI.Services
         /// Получить список всех точек оплаты
         /// </summary>
         /// <returns></returns>
-        public async Task<List<PaymentPoint>?> GetPaymentPointsAsync()
+        public async Task<(int Error, string RequestId, List<PaymentPoint>? Points)> GetPaymentPointsAsync()
         {
             var api = "v0.0";
             var uri = $"{api}/{PAYMENT_POINTS_ENDPOINT}";
 
+            var requestId = _client.GenerateRequestId();
+            
             var jwt = GetJwt();
             if (string.IsNullOrEmpty(jwt))
-                return null;
+                return ((int) HttpStatusCode.Unauthorized, requestId, null);
 
             try
             {
-                var result = await _client.GetAsJson(uri, jwt);
+                _logger.LogDebug($"RequestId: [{requestId}]. Getting payment points list");
+                var result = await _client.GetAsJson(uri, jwt, requestId);
                 switch (result.StatusCode)
                 {
                     case HttpStatusCode.OK:
-                        return await result.Content.ReadAs<List<PaymentPoint>>();
+                        var response = await result.Content.ReadAs<List<PaymentPoint>>();
+                        return (0, requestId, response);
 
                     case HttpStatusCode.Unauthorized:
                         await LogoutAsync();
-                        break;
+                        return ((int) HttpStatusCode.Unauthorized, requestId, null);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error ocured getting payment points list.");
+                _logger.LogError(ex, $"RequestId: [{requestId}]. Error occured getting payment points list.");
             }
-            return null;
+            return (1000, requestId, null);
         }
 
         /// <summary>

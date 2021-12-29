@@ -16,7 +16,7 @@ namespace ProInUG.BlazorUI.Services
         /// Получить список всех точек оплаты
         /// </summary>
         /// <returns></returns>
-        Task<List<PaymentPoint>?> GetPaymentPointsAsync();
+        Task<(int Error, string RequestId, List<PaymentPoint>? Points)> GetPaymentPointsAsync();
 
         /// <summary>
         /// Создать новую точку оплаты

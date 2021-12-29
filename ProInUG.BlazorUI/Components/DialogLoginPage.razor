@@ -1,6 +1,6 @@
 ﻿<MudDialog>
     <DialogContent>
-        <MudText>@ContentText</MudText>
+        <MudText Typo="Typo.body2">@_message</MudText>
     </DialogContent>
     <DialogActions>
         @*<MudButton OnClick="Cancel">Cancel</MudButton>*@
@@ -17,6 +17,15 @@
 
     [Parameter] public Color Color { get; set; }
 
+    private MarkupString _message;
+
     void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+
+    protected override void OnParametersSet()
+    {
+        _message = (MarkupString) ContentText;
+        base.OnParametersSet();
+    }
+
     // void Cancel() => MudDialog?.Cancel();
 }
