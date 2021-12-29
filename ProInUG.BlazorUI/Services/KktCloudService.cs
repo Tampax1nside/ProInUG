@@ -89,12 +89,12 @@ namespace ProInUG.BlazorUI.Services
             try
             {
                 _logger.LogDebug($"RequestId: [{requestId}]. Getting payment points list");
-                var result = await _client.GetAsJson(uri, jwt, requestId);
-                switch (result.StatusCode)
+                var response = await _client.GetAsJson(uri, jwt, requestId);
+                switch (response.StatusCode)
                 {
                     case HttpStatusCode.OK:
-                        var response = await result.Content.ReadAs<List<PaymentPoint>>();
-                        return (0, requestId, response);
+                        var data = await response.Content.ReadAs<List<PaymentPoint>>();
+                        return (0, requestId, data);
 
                     case HttpStatusCode.Unauthorized:
                         await LogoutAsync();
@@ -162,6 +162,7 @@ namespace ProInUG.BlazorUI.Services
             return 1000;
         }
 
+        // TODO: в вдух местах один код - исправить
         private string? GetJwt()
         {
             var asp = (CwAuthenticationStateProvider)_authenticationStateProvider;
