@@ -40,7 +40,7 @@ namespace ProInUG.BlazorUI.Services
 
             try
             {
-                var response = await _client.PostAsJson(new 
+                var response = await _client.SendAsJson(HttpMethod.Post, new 
                 { 
                     name = credentials.Username, 
                     password = credentials.Password 
@@ -69,7 +69,7 @@ namespace ProInUG.BlazorUI.Services
 
             try
             {
-                var response = await _client.PostAsJson(null, uri, token.Jwt);
+                var response = await _client.SendAsJson(HttpMethod.Post, null, uri, token.Jwt);
 
                 if (response.StatusCode != HttpStatusCode.OK) return ((int) response.StatusCode, null);
                 var tokenDto = await response.Content.ReadAs<TokenDto>();

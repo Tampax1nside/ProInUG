@@ -52,7 +52,7 @@ namespace ProInUG.BlazorUI.Services
                 var jwt = GetJwt();
                 if (string.IsNullOrEmpty(jwt))
                     return ((int) HttpStatusCode.Unauthorized, null);
-                var response = await _client.GetAsJson(uri, jwt);
+                var response = await _client.SendAsJson(HttpMethod.Get, null, uri, jwt);
                 if (response.IsSuccessStatusCode)
                 {
                     var data = await response.Content.ReadAs<AccountDto>();

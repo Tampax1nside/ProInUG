@@ -53,7 +53,7 @@ namespace ProInUG.BlazorUI.Services
 
             try
             {
-                var response = await _client.PostAsJson(paymentPoint, uri, jwt);
+                var response = await _client.SendAsJson(HttpMethod.Post, paymentPoint, uri, jwt);
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.OK:
@@ -89,7 +89,7 @@ namespace ProInUG.BlazorUI.Services
             try
             {
                 _logger.LogDebug($"RequestId: [{requestId}]. Getting payment points list");
-                var response = await _client.GetAsJson(uri, jwt, requestId);
+                var response = await _client.SendAsJson(HttpMethod.Get, null, uri, jwt, requestId);
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.OK:
@@ -122,7 +122,7 @@ namespace ProInUG.BlazorUI.Services
                 return;
             try
             {
-                var response = await _client.DeleteAsJson(uri, null, jwt); // TODO: коммент в экстеншнах по этому поводу
+                var response = await _client.SendAsJson(HttpMethod.Delete, null, uri, jwt);
                 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -149,7 +149,7 @@ namespace ProInUG.BlazorUI.Services
                 return (int) HttpStatusCode.Unauthorized;
             try
             {
-                var response = await _client.PatchAsJson(uri, paymentPoint, jwt);
+                var response = await _client.SendAsJson(HttpMethod.Patch, paymentPoint, uri, jwt);
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                     await LogoutAsync();
                 return (int) response.StatusCode;
