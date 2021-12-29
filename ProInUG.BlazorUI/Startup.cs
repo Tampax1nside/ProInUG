@@ -10,6 +10,7 @@ using ProInUG.BlazorUI.Data;
 using ProInUG.BlazorUI.Extentions;
 using ProInUG.BlazorUI.Services;
 using MudBlazor.Services;
+using Serilog;
 
 namespace ProInUG.BlazorUI
 {
@@ -31,7 +32,8 @@ namespace ProInUG.BlazorUI
                 .AddScoped<ProtectedLocalStorage>()
                 .AddScoped<AuthenticationStateProvider, CwAuthenticationStateProvider>()
                 .AddSingleton<ISystemClock, RealSystemClock>()
-                .AddMudServices();
+                .AddMudServices()
+                .AddLogging();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,6 +47,8 @@ namespace ProInUG.BlazorUI
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

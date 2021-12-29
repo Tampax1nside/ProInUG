@@ -1,11 +1,9 @@
+using System;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Serilog;
 
 namespace ProInUG.BlazorUI
 {
@@ -13,14 +11,51 @@ namespace ProInUG.BlazorUI
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            try
+            {
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Logger.GetType().Name == "SilentLogger")
+                {
+                    Log.Logger = new LoggerConfiguration()
+                        .MinimumLevel.Debug()
+                        .WriteTo.Console()
+                        .CreateLogger();
+                }
+
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                        .CaptureStartupErrors(true)
+                        .ConfigureAppConfiguration(config =>
+                        {
+                            config.AddJsonFile("appsettings.logs.json");
+                        });
+                })
+                .UseSerilog((hostContext, loggerConfiguration) =>
+                {
+                    var appName = typeof(Program).Assembly.GetName().Name;
+                    if (appName != null)
+                        loggerConfiguration
+                            .ReadFrom.Configuration(hostContext.Configuration)
+                            .Enrich.FromLogContext()
+                            .Enrich.WithProperty("ApplacationName", appName)
+                            .Enrich.WithProperty("Environment", hostContext.HostingEnvironment);
+#if DEBUG
+                    loggerConfiguration.Enrich.WithProperty("DebuggerAttached", Debugger.IsAttached);
+#endif
                 });
     }
 }
