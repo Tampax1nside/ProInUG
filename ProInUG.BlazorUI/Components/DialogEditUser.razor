@@ -1,0 +1,46 @@
+﻿@using ProInUG.BlazorUI.Dto
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1" />
+            @MudDialog?.Title
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (!string.IsNullOrEmpty(TextContent))
+        {
+            <MudText Align="Align.Left">@TextContent</MudText>   
+        }
+        <EditForm id="e-form" Model="User" OnValidSubmit="Submit">
+            <DataAnnotationsValidator/>
+            <!-- name -->
+            <MudTextField id="name" Label="e-name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                          @bind-Value="User.Name" For="(() => User.Name)" Class="mt-3"/>
+            <!-- user role -->
+            <MudSelect T="@Roles" Variant="Variant.Outlined" Margin="Margin.Dense"
+                       @bind-Value="User.Role" Class="mt-5">
+                @foreach (var value in Enum.GetValues<Roles>())
+                {
+                    <MudSelectItem Value="@value"/>
+                }
+            </MudSelect>
+            <!-- description -->
+            <MudTextField id="e-description" Label="Description" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+                          @bind-Value="User.Description" For="(() => User.Description)" Class="mt-5 mb-5"/>
+        </EditForm>
+    </DialogContent>
+    
+    <DialogActions>
+            <!-- cancel -->
+            <MudButton ButtonType="ButtonType.Button" Variant="Variant.Text" Color="Color.Error" Class="ml-auto"
+                       @onclick="@(Cancel)">
+                Отмена
+            </MudButton>
+            <!-- submit -->
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" form="e-form"
+                       Color="Color.Primary" Class="ml-1">
+                @SubmitButtonName
+                </MudButton>
+        </DialogActions>
+</MudDialog>
