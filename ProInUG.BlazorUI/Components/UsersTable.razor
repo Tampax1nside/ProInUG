@@ -1,15 +1,33 @@
 ﻿<MudTable Items="_usersList" Loading="_loading" 
           LoadingProgressColor="Color.Info">
     <ToolBarContent>
+        <!-- добавить пользователя -->
+        <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" @onclick="CreateUserAsync" Class="ml-n2"/>
         <MudText Typo="Typo.h6">Список пользователей</MudText>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
         <MudTh>Name</MudTh>
+        <MudTh>Role</MudTh>
+        <MudTh>Description</MudTh>
         <MudTh>Action</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.User.Id</MudTd>
         <MudTd DataLabel="Name">@context.User.Name</MudTd>
+        <MudTd DataLabel="Role">@context.User.Role</MudTd>
+        <MudTd DataLabel="Description">@context.User.Description</MudTd>
+        <MudTd>
+            <!-- Детали кнопка -->
+            <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Class="px-2 mx-1"
+                       @onclick="() => DetailsButtonPress(context.User.Id)">
+                Подробнее
+            </MudButton>
+            <!-- Редактировать кнопка -->
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" Class="mx-1"
+                       @onclick="() => EditUserAsync(context.User)">
+                Изменить
+            </MudButton>
+        </MudTd>
     </RowTemplate>
 </MudTable>
