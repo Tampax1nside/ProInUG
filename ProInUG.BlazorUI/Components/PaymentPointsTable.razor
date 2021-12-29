@@ -1,6 +1,6 @@
 ﻿@using ProInUG.BlazorUI.Models
 @using Microsoft.AspNetCore.Connections
-<MudTable Items="PaymentPoints" Loading="_loading" LoadingProgressColor="Color.Info" Filter="new Func<PaymentPoint, bool>(FilterFunc)">
+<MudTable Items="PaymentPoints" Loading="_loading" LoadingProgressColor="Color.Info" Filter="new Func<PaymentPoint, bool>(FilterFunc)" SortLabel="Sort By">
     <ToolBarContent>
         <!-- добавить точку оплаты -->
         <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" @onclick="CreatePaymentPointAsync" Class="ml-n2"/>
@@ -13,12 +13,12 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
-        <MudTh>Is Enable</MudTh>
-        <MudTh>Device url</MudTh>
-        <MudTh>Operator name</MudTh>
-        <MudTh>Nomenclature</MudTh>
-        <MudTh>Taxation type</MudTh>
-        <MudTh>Tax rate</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.IsEnable)">Enabled</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.DeviceUri)">Device url</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.OperatorName)">Operator name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.NomenclatureName)">Nomenclature</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.TaxationType)">Taxation type</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPoint, object>(x=>x.TaxRate)">Tax rate</MudTableSortLabel></MudTh>
         <MudTh>Action</MudTh>
     </HeaderContent>
     <RowTemplate>
