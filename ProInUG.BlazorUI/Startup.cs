@@ -27,6 +27,7 @@ namespace ProInUG.BlazorUI
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddAuthService(Configuration)
+                .AddUsersService(Configuration)
                 .AddKktCloudService(Configuration)
                 .AddScoped<ProtectedLocalStorage>()
                 .AddScoped<AuthenticationStateProvider, CwAuthenticationStateProvider>()
