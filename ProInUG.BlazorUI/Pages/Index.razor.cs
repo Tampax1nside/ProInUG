@@ -12,18 +12,6 @@ namespace ProInUG.BlazorUI.Pages
 {
     public partial class Index
     {
-        [Inject] public AuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
-        // TODO: не место этому тут - просто тестил потом куда-то уйдет
-        private async Task LogoutAsync()
-        {
-            if (AuthenticationStateProvider == null)
-            {
-                return;
-            }
-
-            var asp = (CwAuthenticationStateProvider)AuthenticationStateProvider;
-            await asp.LogoutAsync();
-        }
     }
 }
