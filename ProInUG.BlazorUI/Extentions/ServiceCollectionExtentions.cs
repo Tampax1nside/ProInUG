@@ -26,5 +26,15 @@ namespace ProInUG.BlazorUI.Extentions
             });
             return services;
         }
+
+        public static IServiceCollection AddUsersService(this IServiceCollection services, IConfiguration configuration)
+        {
+            var usersApiBaseAddress = configuration["AuthApiBaseAddress"];
+            services.AddHttpClient<IUsersService, UsersService>(client =>
+            {
+                client.BaseAddress = new Uri((usersApiBaseAddress));
+            });
+            return services;
+        }
     }
 }
