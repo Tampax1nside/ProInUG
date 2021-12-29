@@ -166,11 +166,10 @@ namespace ProInUG.BlazorUI.Components
             // Success
             if (error == 0 && points != null)
             {
-                _points?.Clear();
+                _points.Clear();
                 foreach (var point in points)
                 {
-                    var pp = new PaymentPointsTableModel {Point = point};
-                    _points?.Add(pp);
+                    _points.Add(new PaymentPointsTableModel {Point = point});
                 }
             }
 
@@ -228,12 +227,12 @@ namespace ProInUG.BlazorUI.Components
         /// <returns></returns>
         private IDialogReference? ShowProcessDialog(string message)
         {
-            // TODO: покрасивее как-то надо придумать
             DialogOptions options = new() { DisableBackdropClick = true };
             var parameters = new DialogParameters {{"ContentText", message}};
             return DialogService?.Show<DialogProcess>("In progress", parameters, options);
         }
         
+        // TODO: один и тот же код в двух местах - переделать
         /// <summary>
         /// Показать диалог с ошибкой
         /// </summary>
