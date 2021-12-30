@@ -1,8 +1,8 @@
 ﻿@* @using ProInUG.BlazorUI.Models *@
 @using Microsoft.AspNetCore.Connections
-<MudTable Items="_points" Loading="_loading" 
-          LoadingProgressColor="Color.Info" 
-          Filter="new Func<PaymentPointsTableModel, bool>(FilterFunc)" 
+<MudTable Items="_points" Loading="_loading"
+          LoadingProgressColor="Color.Info"
+          Filter="new Func<PaymentPointsTableModel, bool>(FilterFunc)"
           SortLabel="Sort By">
     <ToolBarContent>
         <!-- добавить точку оплаты -->
@@ -16,12 +16,24 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.IsEnable)">Enabled</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.DeviceUri)">Device url</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.OperatorName)">Operator name</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.NomenclatureName)">Nomenclature</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.TaxationType)">Taxation type</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x=>x.Point.TaxRate)">Tax rate</MudTableSortLabel></MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x => x.Point.IsEnable)">Enabled</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x => x.Point.DeviceUri)">Device url</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x => x.Point.OperatorName)">Operator name</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x => x.Point.NomenclatureName)">Nomenclature</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x => x.Point.TaxationType)">Taxation type</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<PaymentPointsTableModel, object>(x => x.Point.TaxRate)">Tax rate</MudTableSortLabel>
+        </MudTh>
         <MudTh>Action</MudTh>
     </HeaderContent>
     <RowTemplate>
@@ -43,16 +55,20 @@
         <MudTd DataLabel="Tax rate">@context.Point.TaxRate</MudTd>
         <MudTd DataLabel="Action">
             <!-- Детали кнопка -->
-            <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Class="px-2 mx-1"
-                       @onclick="() => DetailsButtonPress(context.Point.Id)">
+            <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small"
+                       @onclick="() => DetailsButtonPress(context.Point.Id)" Class="d-inline-flex">
                 Details
             </MudButton>
             <!-- Редактировать кнопка -->
-            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" Class="mx-1"
-                       @onclick="() => EditPaymentPointAsync(context.Point)">Edit</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
+                       @onclick="() => EditPaymentPointAsync(context.Point)" Class="d-inline-flex">
+                Edit
+            </MudButton>
             <!-- Удалить кнопка -->
-            <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="mx-1"
-                       @onclick="() => DeletePaymentPointAsync(context.Point)">Delete</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
+                       @onclick="() => DeletePaymentPointAsync(context.Point)" Class="d-inline-flex">
+                Delete
+            </MudButton>
         </MudTd>
     </RowTemplate>
     <ChildRowContent>
