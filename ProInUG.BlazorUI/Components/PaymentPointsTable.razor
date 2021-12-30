@@ -54,21 +54,15 @@
         <MudTd DataLabel="Taxation type">@context.Point.TaxationType</MudTd>
         <MudTd DataLabel="Tax rate">@context.Point.TaxRate</MudTd>
         <MudTd DataLabel="Action">
-            <!-- Детали кнопка -->
-            <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small"
-                       @onclick="() => DetailsButtonPress(context.Point.Id)" Class="d-inline-flex">
-                Details
-            </MudButton>
-            <!-- Редактировать кнопка -->
-            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small"
-                       @onclick="() => EditPaymentPointAsync(context.Point)" Class="d-inline-flex">
-                Edit
-            </MudButton>
-            <!-- Удалить кнопка -->
-            <MudButton Variant="Variant.Filled" Color="Color.Error" Size="Size.Small"
-                       @onclick="() => DeletePaymentPointAsync(context.Point)" Class="d-inline-flex">
-                Delete
-            </MudButton>
+            <MudButtonGroup Color="Color.Default" Variant="Variant.Outlined" Size="Size.Small">
+                <MudButton OnClick="() => DetailsButtonPress(context.Point.Id)">Подробнее</MudButton>
+                <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Dense="true"
+                         Direction="Direction.Bottom" OffsetY="true">
+                        <MudMenuItem OnClick="() => DetailsButtonPress(context.Point.Id)">Подробнее</MudMenuItem>
+                        <MudMenuItem OnClick="() => EditPaymentPointAsync(context.Point)">Изменить</MudMenuItem>
+                        <MudMenuItem OnClick="() => DeletePaymentPointAsync(context.Point)">Удалить</MudMenuItem>
+                </MudMenu>
+            </MudButtonGroup>
         </MudTd>
     </RowTemplate>
     <ChildRowContent>
