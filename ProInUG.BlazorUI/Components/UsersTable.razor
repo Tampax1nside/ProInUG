@@ -19,15 +19,13 @@
         <MudTd DataLabel="Description">@context.User.Description</MudTd>
         <MudTd>
             <!-- Детали кнопка -->
-            <MudButton Variant="Variant.Filled" Color="Color.Info" Size="Size.Small" Class="px-2 mx-1"
-                       @onclick="() => DetailsButtonPress(context.User.Id)">
-                Подробнее
-            </MudButton>
+            <MudIconButton Icon="@Icons.Material.Outlined.Chat" OnClick="() => DetailsButtonPress(context.User.Id)"/>
             <!-- Редактировать кнопка -->
-            <MudButton Variant="Variant.Filled" Color="Color.Success" Size="Size.Small" Class="mx-1"
-                       @onclick="() => EditUserAsync(context.User)">
-                Изменить
-            </MudButton>
+            <MudIconButton Icon="@Icons.Material.Outlined.Edit" OnClick="() => EditUserAsync(context.User)"/>
+            <!-- Изменить пароль кнопка -->
+            <MudIconButton Icon="@Icons.Material.Outlined.Password" OnClick="() => ChangePasswordAsync(context.User)"/>
+            <!-- Удалить кнопка -->
+            <MudIconButton Icon="@Icons.Material.Outlined.Cancel" OnClick="() => DeleteUserAsync(context.User)"/>
         </MudTd>
     </RowTemplate>
 </MudTable>
