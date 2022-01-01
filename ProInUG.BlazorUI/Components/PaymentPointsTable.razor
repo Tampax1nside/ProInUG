@@ -69,11 +69,13 @@
         @if (context.ShowDetails)
         {
             <MudTr>
-                <td colspan="6">
-                    <MudCard Elevation="0">
+                <td colspan="8">
+                    <MudCard Elevation="1">
                         <MudCardHeader>
                             <CardHeaderContent>
-                                <MudText Typo="Typo.body1">Детали для точки оплаты <strong>@context.Point.Id</strong></MudText>
+                                <MudText Typo="Typo.h6" Class="px-4">Детали для точки оплаты</MudText>
+                                <MudText Typo="Typo.body1" Class="px-4 mud-text-secondary">@context.Point.Id</MudText>
+                                <MudDivider Class="my-2" />
                             </CardHeaderContent>
                         </MudCardHeader>
                         <MudCardContent>
