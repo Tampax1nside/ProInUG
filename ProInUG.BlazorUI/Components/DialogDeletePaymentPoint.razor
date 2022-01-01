@@ -6,10 +6,10 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField Value="@PaymentPoint.Id.ToString()" Label="Payment point ID" ReadOnly="true" />
-        <MudTextField Value="@PaymentPoint.DeviceUri" Label="Device Url" ReadOnly="true" />
-        <MudTextField Value="@PaymentPoint.OperatorName" Label="Operator Name" ReadOnly="true" />
-        <MudTextField Value="@PaymentPoint.IsEnable" Label="Is Enable" ReadOnly="true" />
+        <MudTextField Value="@PaymentPoint.Id.ToString()" Label="Payment point ID" ReadOnly="true" Class="mb-4"/>
+        <MudTextField Value="@PaymentPoint.DeviceUri" Label="Device Url" ReadOnly="true" Class="mb-4"/>
+        <MudTextField Value="@PaymentPoint.OperatorName" Label="Operator Name" ReadOnly="true" Class="mb-4"/>
+        <MudTextField Value="@PaymentPoint.IsEnable" Label="Is Enable" ReadOnly="true" Class="mb-4"/>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
