@@ -1,0 +1,18 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1" />
+            @MudDialog?.Title
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Value="@User.Id.ToString()" Label="User ID" ReadOnly="true" Class="mb-4"/>
+        <MudTextField Value="@User.Name" Label="User Name" ReadOnly="true" Class="mb-4"/>
+        <MudTextField Value="@User.Role" Label="Role" ReadOnly="true" Class="mb-4"/>
+        <MudTextField Value="@User.Description" Label="Description" ReadOnly="true" Class="mb-4"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="DeleteUser">Delete User</MudButton>
+    </DialogActions>
+</MudDialog>
