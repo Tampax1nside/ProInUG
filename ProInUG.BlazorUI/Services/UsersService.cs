@@ -233,7 +233,7 @@ namespace ProInUG.BlazorUI.Services
                 if (string.IsNullOrEmpty(jwt))
                     return (int) HttpStatusCode.Unauthorized;
                 
-                var response = await _client.SendAsJson(HttpMethod.Patch, password, uri, jwt);
+                var response = await _client.SendAsJson(HttpMethod.Patch, new { value = password }, uri, jwt);
                 if (response.IsSuccessStatusCode)
                 {
                     return 0;
