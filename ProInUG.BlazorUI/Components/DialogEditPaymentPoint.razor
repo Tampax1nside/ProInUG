@@ -16,21 +16,21 @@
             <DataAnnotationsValidator/>
             <!-- device url -->
             <MudTextField id="device-url" Label="Device Url" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                          @bind-Value="PaymentPoint.DeviceUri" For="(() => PaymentPoint.DeviceUri)"/>
+                          @bind-Value="PaymentPoint.DeviceUri" For="(() => PaymentPoint.DeviceUri)" Class="mb-3"/>
             <!-- is enabled -->
-            <MudCheckBox @bind-Checked="@PaymentPoint.IsEnable" Label="Enable"></MudCheckBox>
+            <MudCheckBox @bind-Checked="@PaymentPoint.IsEnable" Label="Enable" Class="mb-3"></MudCheckBox>
             <!-- payment address -->
             <MudTextField Label="Payment address" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                          @bind-Value="PaymentPoint.PaymentAddress" For="(() => PaymentPoint.PaymentAddress)"/>
+                          @bind-Value="PaymentPoint.PaymentAddress" For="(() => PaymentPoint.PaymentAddress)" Class="mb-8"/>
             <!-- operator name -->
             <MudTextField Label="Operator name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                          @bind-Value="PaymentPoint.OperatorName" For="(() => PaymentPoint.OperatorName)"/>
+                          @bind-Value="PaymentPoint.OperatorName" For="(() => PaymentPoint.OperatorName)" Class="mb-4"/>
             <!-- nomenclature name -->
             <MudTextField Label="Nomenclature name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
-                          @bind-Value="PaymentPoint.NomenclatureName" For="(() => PaymentPoint.NomenclatureName)"/>
+                          @bind-Value="PaymentPoint.NomenclatureName" For="(() => PaymentPoint.NomenclatureName)" Class="mb-8"/>
             <!-- taxation type -->
             <MudSelect T="@TaxationType" Variant="Variant.Outlined" Margin="Margin.Dense"
-                       @bind-Value="PaymentPoint.TaxationType">
+                       @bind-Value="PaymentPoint.TaxationType" Class="mb-3">
                 @foreach (var value in Enum.GetValues<TaxationType>())
                 {
                     <MudSelectItem Value="@value"/>
@@ -38,7 +38,7 @@
             </MudSelect>
             <!-- taxation type -->
             <MudSelect T="@TaxRate" Variant="Variant.Outlined" Margin="Margin.Dense"
-                       @bind-Value="PaymentPoint.TaxRate">
+                       @bind-Value="PaymentPoint.TaxRate" Class="mb-8">
                 @foreach (var value in Enum.GetValues<TaxRate>())
                 {
                     <MudSelectItem Value="@value"/>
