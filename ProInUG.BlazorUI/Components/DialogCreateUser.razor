@@ -4,14 +4,14 @@
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
-            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1" />
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1"/>
             @MudDialog?.Title
         </MudText>
     </TitleContent>
     <DialogContent>
         @if (!string.IsNullOrEmpty(TextContent))
         {
-            <MudText Align="Align.Left">@TextContent</MudText>   
+            <MudText Align="Align.Left">@TextContent</MudText>
         }
         <EditForm id="c-form" Model="User" OnValidSubmit="Submit">
             <DataAnnotationsValidator/>
@@ -34,17 +34,17 @@
                           @bind-Value="User.Description" For="(() => User.Description)" Class="mt-5 mb-5"/>
         </EditForm>
     </DialogContent>
-    
-        <DialogActions>
-                <!-- cancel -->
-                <MudButton ButtonType="ButtonType.Button" Variant="Variant.Text" Color="Color.Error" Class="ml-auto"
-                           @onclick="@(Cancel)">
-                    Отмена
-                </MudButton>
-                <!-- submit -->
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" form="c-form"
-                           Color="Color.Primary" Class="ml-1">
-                    @SubmitButtonName
-                    </MudButton>
-            </DialogActions>
+
+    <DialogActions>
+        <!-- cancel -->
+        <MudButton ButtonType="ButtonType.Button" Variant="Variant.Text" Color="Color.Error" Class="ml-auto"
+                   @onclick="@(Cancel)">
+            Отмена
+        </MudButton>
+        <!-- submit -->
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Text" form="c-form"
+                   Color="Color.Primary" Class="ml-1">
+            @SubmitButtonName
+        </MudButton>
+    </DialogActions>
 </MudDialog>
