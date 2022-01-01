@@ -15,7 +15,7 @@
         <EditForm id="e-form" Model="User" OnValidSubmit="Submit">
             <DataAnnotationsValidator/>
             <!-- name -->
-            <MudTextField id="name" Label="e-name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
+            <MudTextField id="e-name" Label="Name" Required="true" Variant="Variant.Outlined" Margin="Margin.Dense"
                           @bind-Value="User.Name" For="(() => User.Name)" Class="mt-3"/>
             <!-- user role -->
             <MudSelect T="@Roles" Variant="Variant.Outlined" Margin="Margin.Dense"
