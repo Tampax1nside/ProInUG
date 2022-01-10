@@ -1,4 +1,4 @@
-﻿<div class="d-flex flex-row mb-4">
+﻿<div class="d-flex flex-row">
     <div class="flex-grow-1">
         <h1>Пользователи</h1>
         <MudText>38 пользователей</MudText>
@@ -9,8 +9,14 @@
                Class="align-self-center">Добавть пользователя</MudButton>
 </div>
 
-<MudTable Items="_usersList" Loading="_loading" 
-          LoadingProgressColor="Color.Info">
+<div class="d-flex flex-row mb-5">
+    <!-- Поиск -->
+    <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Поиск по имени пользователя, описанию" Adornment="Adornment.Start"
+                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mx-2"/>
+</div>
+
+<MudTable Items="_usersList" Loading="_loading" LoadingProgressColor="Color.Info"
+          Filter="new Func<UserViewModel, bool>(FilterFunc)">
     <HeaderContent>
         <MudTh>Id</MudTh>
         <MudTh>Name</MudTh>

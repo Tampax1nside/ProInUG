@@ -24,6 +24,7 @@ namespace ProInUG.BlazorUI.Components
         private List<UserViewModel> _usersList = new();
         private bool _itemsChanged;
         private bool _loading;
+        private string _searchString = "";
 
         protected override async Task OnInitializedAsync()
         {
@@ -377,6 +378,21 @@ namespace ProInUG.BlazorUI.Components
         {
             var user = _usersList.FirstOrDefault(u => u.User.Id == id);
             if (user != null) user.ShowDetails = !user.ShowDetails;
+        }
+
+        /// <summary>
+        /// Фильтрация элементов таблицы
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        private bool FilterFunc(UserViewModel user)
+        {
+            if (string.IsNullOrWhiteSpace(_searchString))
+                return true;
+
+            return user.User.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase) ||
+                   (!string.IsNullOrEmpty(user.User.Description) && 
+                    user.User.Description.Contains(_searchString, StringComparison.OrdinalIgnoreCase));
         }
     }
 
